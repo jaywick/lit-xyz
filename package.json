@@ -4,10 +4,11 @@
     "main": "src/index.ts",
     "license": "MIT",
     "scripts": {
-        "start": "node  --loader ts-node/esm . --resolveJsonModule"
+        "start": "node  --loader ts-node/esm . --resolveJsonModule && serve ./dist"
     },
     "dependencies": {
         "gray-matter": "^4.0.3",
+        "jimp": "^0.16.1",
         "path-to-regexp": "^6.2.0",
         "rehype-raw": "^5.1.0",
         "rehype-stringify": "^8.0.0",
@@ -20,6 +21,7 @@
         "@types/node": "^15.0.2",
         "fs-pro": "^3.7.1",
         "polka": "^0.5.2",
+        "serve": "^11.3.2",
         "ts-node": "^9.1.1",
         "typescript": "^4.2.4"
     }

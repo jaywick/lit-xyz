@@ -7,7 +7,10 @@ import remarkRehype from 'remark-rehype'
 import remarkSlug from 'remark-slug'
 import rehypeRaw from 'rehype-raw'
 import unified from 'unified'
+import Jimp from 'jimp'
 import parseMarkdown from 'gray-matter'
+
+export type IGraph = { articles: IArticle[]; images: IImage[] }
 
 export type IRelatedArticle = Omit<IArticle, 'related'>
 
@@ -32,6 +35,13 @@ export interface IFrontmatter {
     heroAlt: string
 }
 
+export interface IImage {
+    originalPath: string
+    width: number
+    height: number
+    url: string
+}
+
 async function listDirectory(...pathParts: string[]): Promise<string[]> {
     const folder = paths.resolve(...pathParts)
     const children = await fs.readdir(folder)
@@ -39,7 +49,10 @@ async function listDirectory(...pathParts: string[]): Promise<string[]> {
 }
 
 export async function generateGraph() {
-    const graph: { articles: IArticle[] } = { articles: [] }
+    const graph: IGraph = {
+        articles: [],
+        images: [],
+    }
 
     const folders = await listDirectory(__dirname, 'mock-data/docs/blog')
     for await (const folder of folders) {
@@ -54,11 +67,18 @@ export async function generateGraph() {
                 if (article) {
                     graph.articles.push(article)
                 }
+            } else if (['.jpg', '.jpeg', '.png'].includes(extension)) {
+                new Jimp(file, function (_, image) {
+                    const name = paths.basename(file)
+                    const id = paths.basename(paths.dirname(file))
+                    graph.images.push({
+                        originalPath: file,
+                        width: image.bitmap.height,
+                        height: image.bitmap.height,
+                        url: `/blog/${id}/${name}`,
+                    })
+                })
             }
-
-            // } else if (['.jpg', '.jpeg', '.png'].includes(extension)) {
-            //     // parse images
-            // }
         }
     }
 

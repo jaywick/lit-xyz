@@ -5,7 +5,7 @@ import { html } from './render'
 export const Page = ({
     title,
     author,
-    date,
+    readableDate,
     readTime,
     htmlContent,
     heroStaticPath,
@@ -22,9 +22,7 @@ export const Page = ({
                 <div class="byline">
                     <address class="author">${author}</address>
                     &bull;
-                    <time datetime="{date}">
-                        ${new Date(date).toLocaleDateString()}
-                    </time>
+                    <time datetime="{date}"> ${readableDate} </time>
                     &bull;
                     <span>${readTime} min read</span>
                 </div>
