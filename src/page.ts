@@ -1,32 +1,6 @@
 import { Head, Series, Footer, Header } from './components'
+import { IArticle } from './graph'
 import { html } from './render'
-
-interface PageArg {
-    id: string
-    title: string
-    author: string
-    date: string
-    readTime: number
-    htmlContent: string
-    slug: string
-    heroAlt: string
-    heroStaticPath: string
-    tag: string
-    related: {
-        id: string
-        title: string
-        author: string
-        date: string
-        readTime: number
-        htmlContent: string
-        slug: string
-        heroAlt: string
-        heroStaticPath: string
-        tag: string
-        url: string
-        readableDate: string
-    }[]
-}
 
 export const Page = ({
     title,
@@ -38,7 +12,7 @@ export const Page = ({
     heroAlt,
     tag,
     related,
-}: PageArg) => html`<!DOCTYPE html>
+}: IArticle) => html`<!DOCTYPE html>
     <html lang="en">
         ${Head({ title })}
         <body>

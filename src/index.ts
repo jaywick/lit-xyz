@@ -1,19 +1,22 @@
+import { generateGraph } from './graph'
 import { Home } from './home'
 import { Page } from './page'
-import sampleData from './sample-data.json'
+// import sampleData from './mock-data/sample-data.json'
 import { NotFound, Redirect, serve } from './server'
 
 main()
 
 async function main() {
+    const graph = await generateGraph()
+
     serve({
-        '/': () => Home({ articles: sampleData.articles }),
+        '/': () => Home({ articles: graph.articles }),
         '/blog/:id/:slug?': ({ id, slug }) => {
             if (!id) {
                 return new NotFound()
             }
 
-            const article = sampleData.articles.find((x) => x.id === id)
+            const article = graph.articles.find((x) => x.id === id)
 
             if (article) {
                 if (article.slug !== slug) {

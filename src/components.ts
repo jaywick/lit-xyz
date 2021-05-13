@@ -1,3 +1,4 @@
+import { IRelatedArticle } from './graph'
 import { html } from './render'
 
 export const Logo = () => html`<svg
@@ -31,20 +32,7 @@ export const Logo = () => html`<svg
 
 interface SeriesArgs {
     tag: string
-    related: {
-        id: string
-        title: string
-        author: string
-        date: string
-        readTime: number
-        htmlContent: string
-        slug: string
-        heroAlt: string
-        heroStaticPath: string
-        tag: string
-        url: string
-        readableDate: string
-    }[]
+    related: IRelatedArticle[]
 }
 
 export const Series = ({ tag, related }: SeriesArgs) => {
