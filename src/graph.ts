@@ -4,11 +4,14 @@ import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 // @ts-ignore
+import remarkPrism from 'remark-prism'
+// @ts-ignore
 import remarkSlug from 'remark-slug'
 import rehypeRaw from 'rehype-raw'
 import unified from 'unified'
 import Jimp from 'jimp'
 import parseMarkdown from 'gray-matter'
+import { lazyImages } from './lazy-images-plugin'
 
 export type IGraph = { articles: IArticle[]; images: IImage[] }
 
@@ -37,9 +40,9 @@ export interface IFrontmatter {
 
 export interface IImage {
     originalPath: string
+    relativePath: string
     width: number
     height: number
-    url: string
 }
 
 async function listDirectory(...pathParts: string[]): Promise<string[]> {
@@ -75,7 +78,7 @@ export async function generateGraph() {
                         originalPath: file,
                         width: image.bitmap.height,
                         height: image.bitmap.height,
-                        url: `/blog/${id}/${name}`,
+                        relativePath: `blog/${id}/${name}`,
                     })
                 })
             }
@@ -114,8 +117,8 @@ async function resolveArticle(path: string): Promise<IArticle | null> {
         author: 'Jay Wick',
 
         originalMarkdown: content,
-        readTime: 0,
-        readableDate: new Intl.DateTimeFormat('en-AU').format(new Date(date)),
+        readableDate: readableDate(frontmatter.date),
+        readTime: readTime(content),
         htmlContent,
         heroStaticPath: `/blog/${id}/${hero}`,
         url: `/blog/${id}/${slug}`,
@@ -127,12 +130,29 @@ async function transformMarkdown(text: string): Promise<string> {
     const processor = unified()
         .use(remarkParse)
         .use(remarkSlug)
-        // .use(remarkPrism)
+        .use(remarkPrism)
         .use(remarkRehype, { allowDangerousHtml: true })
         .use(rehypeRaw)
         .use(rehypeStringify, { allowDangerousHtml: true })
-    // .use(lazyImages)
+        .use(lazyImages)
 
     const result = await processor.process(text)
     return String(result)
+}
+
+const readableDate = (value: string) => {
+    return new Date(Date.parse(value)).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    })
+}
+
+const readTime = (content: string) => {
+    const READ_SPEED = 250 // wpm
+    const IMAGE_SPEED = 5 / 60 // 5s per image
+
+    const words = content.match(/[\w-]+/g)?.length ?? 0
+    const images = content.match(/\!\[.+?\]\(.+?\)/g)?.length ?? 0
+    return Math.ceil(words / READ_SPEED + images * IMAGE_SPEED)
 }

@@ -4,7 +4,10 @@
     "main": "src/index.ts",
     "license": "MIT",
     "scripts": {
-        "start": "node  --loader ts-node/esm . --resolveJsonModule && serve ./dist"
+        "typecheck": "tsc -p . --noEmit",
+        "export": "node --loader ts-node/esm . --resolveJsonModule",
+        "serve": "serve ./dist",
+        "start": "SKIP_IMAGES=false && yarn export && yarn serve"
     },
     "dependencies": {
         "gray-matter": "^4.0.3",
@@ -13,6 +16,7 @@
         "rehype-raw": "^5.1.0",
         "rehype-stringify": "^8.0.0",
         "remark-parse": "^9.0.0",
+        "remark-prism": "^1.3.6",
         "remark-rehype": "^8.1.0",
         "remark-slug": "^6.0.0",
         "unified": "^9.2.1"
@@ -20,6 +24,7 @@
     "devDependencies": {
         "@types/node": "^15.0.2",
         "fs-pro": "^3.7.1",
+        "ora": "^5.4.0",
         "polka": "^0.5.2",
         "serve": "^11.3.2",
         "ts-node": "^9.1.1",
