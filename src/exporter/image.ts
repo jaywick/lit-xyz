@@ -1,27 +1,19 @@
 import { promises as fs } from 'fs'
 import Jimp from 'jimp'
 import paths from 'path'
-import { IImage } from './graph'
+import { IImage } from '../types'
 
 export async function resizeImage(
     image: IImage,
+    dist: string,
     skipImages = false
 ): Promise<void> {
     if (skipImages) {
-        fs.copyFile(
-            image.originalPath,
-            paths.join(__dirname, '..', 'dist', image.relativePath)
-        )
+        fs.copyFile(image.originalPath, paths.join(dist, image.relativePath))
         return
     }
 
-    const outputFolder = paths.resolve(
-        __dirname,
-        '..',
-        'dist',
-        image.relativePath,
-        '..'
-    )
+    const outputFolder = paths.resolve(dist, image.relativePath, '..')
 
     await Promise.allSettled([
         resize(image.originalPath, outputFolder, [320, 320], '-320w'),

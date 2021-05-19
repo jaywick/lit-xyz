@@ -1,6 +1,6 @@
 import { Footer, Head, Header } from './components'
-import { IArticle } from './graph'
-import { html } from './render'
+import { IArticle } from '../types'
+import { html } from './utils'
 
 interface HomeArgs {
     articles: IArticle[]
@@ -22,7 +22,7 @@ export const Home = ({ articles }: HomeArgs) => html`<!DOCTYPE html>
                 <section>
                     <h2>Blog Posts</h2>
                     <ul>
-                        ${articles.map(
+                        ${articles.sort(byDateDesc).map(
                             ({ id, title, url }) => html`
                                 <li key="${id}">
                                     <a href="${url}">${title} </a>
@@ -35,3 +35,6 @@ export const Home = ({ articles }: HomeArgs) => html`<!DOCTYPE html>
             ${Footer()}
         </body>
     </html>`
+
+const byDateDesc = (a: IArticle, b: IArticle) =>
+    new Date(b.date).getTime() - new Date(a.date).getTime()

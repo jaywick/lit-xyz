@@ -1,5 +1,5 @@
-import { IRelatedArticle } from './graph'
-import { html } from './render'
+import { IRelatedArticle } from '../types'
+import { html } from './utils'
 
 export const Logo = () => html`<svg
     class="main-logo"

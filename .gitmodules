@@ -1,0 +1,3 @@
+[submodule "jaywick-mdx"]
+	path = doc
+	url = git@github.com:jaywick/jaywick-mdx.git

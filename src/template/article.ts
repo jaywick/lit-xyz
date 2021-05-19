@@ -1,8 +1,8 @@
+import { IArticle } from '../types'
 import { Head, Series, Footer, Header } from './components'
-import { IArticle } from './graph'
-import { html } from './render'
+import { html } from './utils'
 
-export const Page = ({
+export const Article = ({
     title,
     author,
     readableDate,

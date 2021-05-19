@@ -4,16 +4,30 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Type Check",
+            "label": "$(symbol-interface) Typecheck",
             "type": "shell",
             "command": "yarn tsc -p . --noEmit --watch --incremental",
             "problemMatcher": "$tsc-watch"
         },
         {
-            "label": "Start",
+            "label": "$(run-all) Start",
             "type": "shell",
             "command": "yarn start",
-            "problemMatcher": []
+            "detail": "Runs an export in development mode with no image resizing then serves the content",
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "$(package) Export all",
+            "type": "shell",
+            "detail": "Builds a production folder /dist with all HTML and images",
+            "command": "yarn export",
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "$(server-process) Serve",
+            "type": "shell",
+            "command": "yarn serve",
+            "problemMatcher": "$tsc"
         }
     ]
 }
