@@ -3,12 +3,8 @@ import Jimp from 'jimp'
 import paths from 'path'
 import { IImage } from '../types'
 
-export async function resizeImage(
-    image: IImage,
-    dist: string,
-    skipImages = false
-): Promise<void> {
-    if (skipImages) {
+export async function resizeImage(image: IImage, dist: string): Promise<void> {
+    if (global.args.skipImages) {
         fs.copyFile(image.originalPath, paths.join(dist, image.relativePath))
         return
     }

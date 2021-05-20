@@ -6,6 +6,12 @@
     --typography-code: 'Roboto Slab', Georgia, serif;
 }
 
+html {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 body {
     color: var(--theme-primary);
     font-size: 18px;

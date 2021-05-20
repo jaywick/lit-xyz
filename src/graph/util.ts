@@ -15,13 +15,17 @@ class FileSystemObject {
     get parent(): Directory {
         return new Directory(paths.dirname(this.path))
     }
+}
+
+export class File extends FileSystemObject {
+    async writeContent(content: string) {
+        await fs.writeFile(this.path, content)
+    }
 
     async readContent(): Promise<string> {
         return String(await fs.readFile(this.path))
     }
-}
 
-export class File extends FileSystemObject {
     get extension(): string {
         return paths.extname(this.path)
     }

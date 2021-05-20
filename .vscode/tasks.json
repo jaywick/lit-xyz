@@ -14,7 +14,23 @@
             "type": "shell",
             "command": "yarn start",
             "detail": "Runs an export in development mode with no image resizing then serves the content",
-            "problemMatcher": "$tsc"
+            "problemMatcher": [
+                "$tsc",
+                {
+                    "applyTo": "allDocuments",
+                    "source": "Markdown lint",
+                    "pattern": [
+                        {
+                            "regexp": "^(.+):(\\d+)\\t(warn|error)\\s([a-z0-9-]+)\t(.+)$",
+                            "file": 1,
+                            "location": 2,
+                            "severity": 3,
+                            "code": 4,
+                            "message": 5
+                        }
+                    ]
+                }
+            ]
         },
         {
             "label": "$(package) Export all",
@@ -28,6 +44,28 @@
             "type": "shell",
             "command": "yarn serve",
             "problemMatcher": "$tsc"
+        },
+        {
+            "label": "$(report) Dryrun",
+            "type": "shell",
+            "command": "yarn dryrun",
+            "problemMatcher": [
+                {
+                    "applyTo": "allDocuments",
+                    "source": "Markdown lint",
+                    "fileLocation": "absolute",
+                    "pattern": [
+                        {
+                            "regexp": "^(.+):(\\d+)\\s+(warn|error)\\s+([a-z0-9\\-]+)\\s+(.+)$",
+                            "file": 1,
+                            "location": 2,
+                            "severity": 3,
+                            "code": 4,
+                            "message": 5
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

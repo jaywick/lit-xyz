@@ -1,45 +1,41 @@
-import ora, { Ora } from 'ora'
+import chalk from 'chalk'
+import ora from 'ora'
 import { performance } from 'perf_hooks'
-
-export const DRY_RUN = !!process.env.DRY_RUN
 
 export async function reportProgress(
     title: string,
     work: (progress: (total: number) => void) => void | Promise<void>
-) {
+): Promise<boolean> {
     const reporter = ora(title)
     const startTime = performance.now()
     reporter.start(title)
 
+    let innerTotal = 0
     try {
-        let progressReporter: Ora | undefined = undefined
-        let innerTotal = 0
         let i = 0
-        const progressFn = (total: number) => {
-            if (progressReporter == null) {
-                innerTotal = total
-                progressReporter = ora(title)
-                progressReporter.prefixText = ' '
-                progressReporter.start()
-            }
 
-            progressReporter.text = `${i}/${total} processed`
+        const progressFn = (total: number) => {
+            innerTotal = total
+            reporter.text = `${title} (${i}/${total})`
             ++i
         }
-        await Promise.resolve(work(progressFn))
 
-        if (progressReporter != null) {
-            progressReporter!.info(`${innerTotal} processed`)
-        }
+        await work(progressFn)
     } catch (err) {
         console.error(err)
-        reporter.fail(`${title} (${elapsed(startTime)}ms)`)
-        return
+        reporter.fail(`${title} ${chalk.gray(elapsed(startTime, innerTotal))}`)
+        return false
     }
 
-    reporter.succeed(`${title} (${elapsed(startTime)}ms)`)
+    reporter.succeed(`${title} ${chalk.gray(elapsed(startTime, innerTotal))}`)
+    return true
 }
 
-function elapsed(startTime: number) {
-    return Math.round(performance.now() - startTime)
+export function elapsed(startTime: number, subtaskCount: number = 0) {
+    const elapsedTime = Math.round(performance.now() - startTime) + 'ms'
+
+    const innerText =
+        subtaskCount > 0 ? `${subtaskCount} in ${elapsedTime}` : elapsedTime
+
+    return chalk.grey(`(${innerText})`)
 }

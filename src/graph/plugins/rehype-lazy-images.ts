@@ -7,7 +7,9 @@ type ImageNode = Node & {
     properties: { [key: string]: string | null }
 }
 
-export const lazyImages = () => (tree: Node) => {
+export const rehypeLazyImages = () => (tree: Node) => {
+    visit(tree, ['element'], visitor)
+
     function visitor({ tagName, properties }: ImageNode) {
         if (tagName !== 'img') {
             return
@@ -32,6 +34,4 @@ export const lazyImages = () => (tree: Node) => {
             }
         }
     }
-
-    visit(tree, ['element'], visitor)
 }
