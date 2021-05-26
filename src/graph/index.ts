@@ -14,10 +14,6 @@ export async function generateGraph(docs: Directory, publics: Directory) {
     for await (const subdirectory of docs.subdirectories()) {
         if (subdirectory.path.startsWith('.')) continue
 
-        if (global.args.pick) {
-            if (subdirectory.name !== global.args.pick) continue
-        }
-
         for await (const file of subdirectory.files()) {
             if (['.md', '.mdx'].includes(file.extension.toLowerCase())) {
                 const article = await resolveArticle(file)

@@ -1,8 +1,8 @@
 ---
 title: 'We wash our brush with odorless thinner. Poor old tree.'
 slug: we-wash-our-brush-with-odorless-thinner-poor-old-tree
-date: '2009-02-22T09:42:00.000Z'
-category: life
+date: 2017-01-10
+tag: life
 hero: bob-ross-oak_blue-ridge-falls-articleLarge-v2.jpg
 ---
 
@@ -46,8 +46,8 @@ Isn't that fantastic? Isn't that fantastic? You can just push a little tree out 
 Wait there's more
 
 1. Yes
-1. There
-1. Really is
+2. There
+3. Really is
 
 And a table later on
 

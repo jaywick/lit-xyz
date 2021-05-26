@@ -8,7 +8,11 @@ main()
 async function main() {
     global.args = new Command()
         .option('--skip-images', 'skip image processing', false)
-        .option('--pick <article>', 'process single article by id', false)
+        .option(
+            '--mock-data',
+            'process mock data instead of actual articles',
+            false
+        )
         .option(
             '--dry-run',
             'run commands without making changes to filesystem',
@@ -20,7 +24,10 @@ async function main() {
 
     console.info('Running with options: ' + JSON.stringify(global.args))
 
-    const docs = new Directory(__dirname, '../doc/articles')
+    const docs = new Directory(
+        __dirname,
+        global.args.mockData ? './mock-data/docs/articles/' : '../doc/articles'
+    )
     const publics = new Directory(__dirname, '../public')
     const graph = await generateGraph(docs, publics)
 
@@ -30,7 +37,7 @@ async function main() {
 
 interface IArgs {
     skipImages: boolean
-    pick: string | false
+    mockData: boolean
     dryRun: boolean
 }
 

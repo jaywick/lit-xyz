@@ -40,7 +40,10 @@ const Vimeo = (args: { src: string }) => {
 }
 
 const YouTube = (args: { src: string }) => {
-    const { id } = extract(args.src, /(youtube.com|youtu.be)\/(?<id>\d+)/i)
+    const { id } = extract(
+        args.src,
+        /youtube.com\/watch\?v=(?<id>[a-z0-9-_]+)/i
+    )
 
     if (!id) {
         return null

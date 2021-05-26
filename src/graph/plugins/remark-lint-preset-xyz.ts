@@ -71,8 +71,6 @@ import remarkLintNoHeadingIndent from 'remark-lint-no-heading-indent'
 // @ts-ignore
 import remarkLintNoHeadingLikeParagraph from 'remark-lint-no-heading-like-paragraph'
 // @ts-ignore
-import remarkLintNoHtml from 'remark-lint-no-html'
-// @ts-ignore
 import remarkLintNoInlinePadding from 'remark-lint-no-inline-padding'
 // @ts-ignore
 import remarkLintNoLiteralUrls from 'remark-lint-no-literal-urls'
@@ -112,6 +110,7 @@ import remarkLintTablePipeAlignment from 'remark-lint-table-pipe-alignment'
 import remarkLintTablePipes from 'remark-lint-table-pipes'
 // @ts-ignore
 import remarkLintUnorderedListMarkerStyle from 'remark-lint-unordered-list-marker-style'
+import remarkLintNoIllegalHtml from './remark-lint-no-illegal-html'
 
 const requirer =
     (context: string) =>
@@ -160,7 +159,7 @@ export const lint = async (path: string, markdown: string) => {
         .use(remarkLintNoHeadingContentIndent)
         .use(remarkLintNoHeadingIndent)
         .use(remarkLintNoHeadingLikeParagraph)
-        .use(remarkLintNoHtml)
+        .use(remarkLintNoIllegalHtml)
         .use(remarkLintNoInlinePadding)
         .use(remarkLintNoLiteralUrls)
         .use(remarkLintNoParagraphContentIndent)
