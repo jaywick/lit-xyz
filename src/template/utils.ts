@@ -2,7 +2,15 @@ export type StaticHtml = string
 
 export function html(
     strings: TemplateStringsArray,
-    ...values: unknown[]
+    ...values: (
+        | string
+        | number
+        | boolean
+        | undefined
+        | null
+        | string[]
+        | StaticHtml
+    )[]
 ): StaticHtml {
     let result = strings[0]
 
@@ -28,7 +36,7 @@ function normalize(value: unknown): string {
         typeof value === 'symbol'
     ) {
         throw new Error(
-            `Cannot render invalid value of type ${typeof value}: ${String(
+            `Cannot render invalid value of type ${typeof value}: ${JSON.stringify(
                 value
             )}`
         )

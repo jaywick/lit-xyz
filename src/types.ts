@@ -3,6 +3,7 @@ export type IGraph = {
     articles: IArticle[]
     images: IImage[]
     public: IPublic[]
+    tags: ITag[]
 }
 
 export type IRelatedArticle = Omit<IArticle, 'related'>
@@ -16,6 +17,7 @@ export interface IArticle extends IFrontmatter {
     url: string
     related: IRelatedArticle[]
     excerpt: string
+    resolvedTag: ITag | null
 }
 
 export interface IAbout {
@@ -24,6 +26,15 @@ export interface IAbout {
     tagline: string
     description: string
     themeColor: string
+}
+
+export interface ITag {
+    key: string
+    name: string
+    hero: string
+    story: string
+    aliases: string[]
+    urls: string[]
 }
 
 export interface IFrontmatter {

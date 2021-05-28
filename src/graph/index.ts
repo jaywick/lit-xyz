@@ -1,17 +1,23 @@
 import chalk from 'chalk'
-import { IArticle, IGraph } from '../types'
+import { IArticle, IGraph, ITag } from '../types'
 import { resolveImage } from './image'
 import { resolveArticle } from './markdown'
-import { Directory, File } from './util'
-import { resolveAbout } from './yaml'
+import { Directory, File, nil } from './util'
+import { resolveAbout, resolveTags } from './yaml'
 
-export async function generateGraph(
-    docs: Directory,
-    about: File,
+interface Args {
+    docs: Directory
+    tags: Directory
+    about: File
     publics: Directory
-) {
+}
+
+export async function generateGraph({ docs, tags, about, publics }: Args) {
+    const tagFile = new File(tags.path, 'tags.yml').ensureExists()
+
     const graph: IGraph = {
         about: await resolveAbout(about),
+        tags: await resolveTags(tagFile),
         articles: [],
         images: [],
         public: [],
@@ -36,9 +42,14 @@ export async function generateGraph(
         }
     }
 
+    const matchTags = tagMatcher(graph.tags)
     for await (const article of graph.articles) {
         article.author = article.author || graph.about.author
-        article.related = graph.articles.filter(bySameTagFilter(article))
+        article.resolvedTag = matchTags(article.tag)
+    }
+
+    for await (const article of graph.articles) {
+        article.related = graph.articles.filter(bySameTagFilter)
     }
 
     for await (const file of publics.files()) {
@@ -62,3 +73,19 @@ const bySameTagFilter =
     (a: IArticle) =>
     (b: IArticle): boolean =>
         a.tag === b.tag && a.id !== b.id
+
+const tagMatcher =
+    (tags: ITag[]) =>
+    (tag: string | nil): ITag | null => {
+        if (tag == null) return null
+        if (tags.length === 0) return null
+
+        const directMatch = tags.find((t) => t.key === tag)
+        if (directMatch) return directMatch
+
+        const aliasMatch = tags.find((t) => t.aliases.includes(tag))
+        if (aliasMatch) return aliasMatch
+
+        console.error(`Missing tag '${tag}' in tags`)
+        return null
+    }

@@ -1,6 +1,8 @@
-import { Footer, Head, Header } from './components'
+import { Header } from './components/header'
 import { IAbout, IArticle } from '../types'
 import { byDateDescSorter, html } from './utils'
+import { Footer } from './components/footer'
+import { Head } from './components/head'
 
 interface HomeArgs {
     articles: IArticle[]

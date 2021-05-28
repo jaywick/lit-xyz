@@ -26,6 +26,7 @@ async function main() {
 
     const publics = new Directory(__dirname, '../public').ensureExists()
     let docs = new Directory(__dirname, '../doc/articles').ensureExists()
+    let tags = new Directory(__dirname, '../doc/tags').ensureExists()
     let about = new File(__dirname, '../doc/about.yml').ensureExists()
 
     if (global.args.mockData) {
@@ -33,12 +34,13 @@ async function main() {
             __dirname,
             './mock-data/docs/articles/'
         ).ensureExists()
+        tags = new Directory(__dirname, './mock-data/docs/tags/').ensureExists()
         about = new File(__dirname, './mock-data/docs/about.yml').ensureExists()
     }
 
-    const graph = await generateGraph(docs, about, publics)
+    const graph = await generateGraph({ docs, tags, about, publics })
 
-    const dist = new Directory(__dirname, '../dist').ensureExists()
+    const dist = new Directory(__dirname, '../dist')
     await exportAll(graph, dist)
 }
 

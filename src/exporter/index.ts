@@ -14,7 +14,7 @@ export async function exportAll(graph: IGraph, dist: Directory) {
     await reportProgress('Clear output folders', async () => {
         if (!global.args.dryRun) {
             await fs.rmdir(dist.path, { recursive: true })
-            await fs.mkdir(dist.path)
+            await fs.mkdir(dist.path, { recursive: true })
         }
     })
 

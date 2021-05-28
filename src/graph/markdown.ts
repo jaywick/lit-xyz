@@ -10,7 +10,7 @@ import unified from 'unified'
 import parseMarkdown from 'gray-matter'
 import { rehypeLazyImages } from './plugins/rehype-lazy-images'
 import { IArticle, IFrontmatter } from '../types'
-import { File } from './util'
+import { File, required } from './util'
 import { remarkVideo } from './plugins/remark-videos'
 import { lint } from './plugins/remark-lint-preset-xyz'
 import remarkStripMarkdown from 'strip-markdown'
@@ -22,7 +22,6 @@ export async function resolveArticle(file: File): Promise<IArticle | null> {
 
     const frontmatter = parsed.data as IFrontmatter
 
-    const required = requirer(id)
     const markdown = parsed.content
     const excerptInMarkdown = parsed.excerpt!
 
@@ -42,23 +41,36 @@ export async function resolveArticle(file: File): Promise<IArticle | null> {
     return {
         id,
 
-        title: required(frontmatter, 'title'),
-        date: required(frontmatter, 'date'),
-        tag: required(frontmatter, 'tag'),
-        hero: required(frontmatter, 'hero'),
+        title: required(
+            frontmatter.title,
+            `Missing 'title' in tag Article #${id}`
+        ),
+        date: required(
+            frontmatter.date,
+            `Missing 'date' in tag Article #${id}`
+        ),
+        tag: required(frontmatter.tag, `Missing 'tag' in tag Article #${id}`),
+        hero: required(
+            frontmatter.hero,
+            `Missing 'hero' in tag Article #${id}`
+        ),
 
         author: frontmatter.author || '',
         slug,
         heroAlt: frontmatter.heroAlt || '',
 
         originalMarkdown: markdown,
-        readableDate: readableDate(required(frontmatter, 'date')),
+        readableDate: readableDate(
+            required(frontmatter.date, `Missing 'date' in tag Article #${id}`)
+        ),
         readTime: readTime(markdown),
         htmlContent,
         heroStaticPath: `/blog/${id}/${frontmatter.hero}`,
         url: `/blog/${id}/${frontmatter.slug}`,
-        related: [],
         excerpt: await plainText(excerptInMarkdown),
+
+        related: [],
+        resolvedTag: null,
     }
 }
 
@@ -90,11 +102,17 @@ async function plainText(text: string): Promise<string> {
 }
 
 const readableDate = (value: string) => {
-    return Intl.DateTimeFormat('en-AU', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    }).format(Date.parse(value))
+    try {
+        return Intl.DateTimeFormat('en-AU', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        }).format(Date.parse(value))
+    } catch {
+        throw new Error(
+            `Invalid date. Could not parse: ${JSON.stringify(value)}`
+        )
+    }
 }
 
 const readTime = (content: string) => {
@@ -114,14 +132,3 @@ const slugify = (string: string) => {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '')
 }
-
-const requirer =
-    (id: string) =>
-    <U extends { [key: string]: any }>(obj: U, key: keyof U) => {
-        if (obj[key] == null || String(obj[key]).trim() === '') {
-            console.error(`Missing ${key} in ${id}`)
-            return ''
-        }
-
-        return obj[key]
-    }

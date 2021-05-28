@@ -1,0 +1,98 @@
+- key: vizr
+  name: Vizr
+  hero: ./heroes/vizr.png
+  story: The app launcher on the desktop computer is the power user’s best friend. A quick shortcut key and suddenly you have access to everything. No clicking, manual browsing or even scanning one’s eyes around. All you have to know is what you’re looking for.
+  urls:
+      - https://github.com/jaywick/vizr
+
+- key: newsfeed
+  name: Newsfeed
+  hero: ./heroes/newsfeed.png
+  story: Newsfeed was born from my dislike of relying on social networks like Reddit or Twitter for news. There were too many distractions, spammy content and irrelevant ads and recommendations. I loved the new look of Google News but it never surfaced my chosen sites properly. I knew the sites I liked. I just wanted to see their headlines, no signing up, no background downloads, no god-awful unread count making it a chore to keep up. Something a bit nicer for my digital wellbeing, but something that still catered for my need for an information fix.
+  urls:
+      - https://play.google.com/store/apps/details?id=xyz.jaywick.labs.newsfeed
+
+- key: kalq
+  name: Kalq
+  hero: ./heroes/kalq.jpg
+  story: Kalq is a tiny minimalist app which shows the answer as you type, there’s no buttons, no equals sign, you don’t even use a mouse.
+  urls:
+      - https://github.com/jaywick/kalq
+      - https://www.youtube.com/watch?v=8691ZsIkMJQ
+
+- key: jaywick-xyz
+  name: jaywick.xyz
+  hero: ./heroes/jaywick-xyz.png
+  story: Every iteration of this very website you're reading this on
+  urls:
+      - https://github.com/jaywick/blog-xyz/
+
+- key: its-time
+  name: It Is Time
+  story: My interest in word clocks led me to make a screensaver on my phone for just that. Given its popularity with whom saw it running, I decided to make it available for everyone on the Play Store. It simply displays the current time, but in words while you have your phone charging or docked.
+  hero: ./heroes/its-time.jpg
+  urls:
+      - https://play.google.com/store/apps/details?id=com.jaywick.labs.timeinwords
+
+- key: blackstorm-alpha
+  name: Blackstorm Alpha
+  hero: ./heroes/blackstorm-alpha.jpg
+  story: |
+      It’s no secret I love my jet fighters. It’s their superiority over the skies, their pure power and engineering that goes into these machines that make then so amazing. It was a few years ago during a boring lecture, I started drawing sketches for a jet fighter game. Every existing title had bored me so far, it had neither the excitement nor the overkill I craved.
+
+      That night for fun I did some research into game engines and ended up making a group of cylinders and boxes roll across a mountainous terrain. My addiction to this game grew and so did the encouragement of my friends who all wanted their hands on early betas.
+
+      So the Blackstorm Alpha project was conceived, and at one point I had about fifteen good friends have their hands on the evolving game. Be sure to check out the videos videos and blog posts about it!
+  urls:
+      - https://www.youtube.com/watch?v=6L19PocLY2A
+
+- key: car-pc
+  name: Car PC
+  hero: ./heroes/car-pc.jpg
+  story: |
+      In the Autumn of 2009, long before Android Auto and Apple Carplay, my best friend and I realised how disheartened we were by the UX of touch screen car entertainment systems and decided to start the project to build one ourselves.
+
+      With the advent of Android Auto and Apple Car Play, this project became redundant. But these are the adventures we had a long the way in developing it.
+  urls: []
+
+- key: gadgets
+  name: Gadgets
+  hero: ./heroes/gadgets.jpg
+  story: Fancy and shiny new things I end up splurging money on and eventually trying to hack
+  urls: []
+
+- key: life
+  name: Life
+  hero: ./heroes/life.jpg
+  story: Things happening in my life not related to projects. Ok I lie, somehow I manage to make projects out of life events.
+  urls: []
+
+- key: opencity
+  name: Open City
+  hero: ./heroes/opencity.jpg
+  story: What started out as a tutorial on Git and Object Oriented Design for friends, turned into an ambitious project to create a city simulator mobile game
+  urls: []
+
+- key: other-projects
+  name: Other Projects
+  hero: ./heroes/misc.png
+  story: Throwbacks to projects from ages back or minor endevours that never really were able to be categorised themselves
+  urls: []
+
+- key: pro-tip
+  name: ProTips
+  hero: ./heroes/protip.jpg
+  story: Guides, instructions and workarounds to get stuff happening
+  urls: []
+
+- key: opinion
+  name: Opinion
+  hero: ./heroes/digital-rorchak.png
+  story: These are the unstructured ramblings I've tried to warn you about
+  urls: []
+
+- key: university
+  name: University Projects
+  hero: ./heroes/university.jpg
+  story: Final year projects from my time at uni
+  urls: []

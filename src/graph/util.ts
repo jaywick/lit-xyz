@@ -68,3 +68,14 @@ export class Directory extends FileSystemObject {
         }
     }
 }
+
+export const required = (value: any, errorMessageIfMissing: string) => {
+    if (value == null || String(value).trim() === '') {
+        console.error(errorMessageIfMissing)
+        return ''
+    }
+
+    return value
+}
+
+export type nil = null | undefined

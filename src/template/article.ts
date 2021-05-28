@@ -1,5 +1,8 @@
-import { IAbout, IArticle } from '../types'
-import { Head, Series, Footer, Header } from './components'
+import { IAbout, IArticle, ITag } from '../types'
+import { Footer } from './components/footer'
+import { Head } from './components/head'
+import { Header } from './components/header'
+import { Series } from './components/series'
 import { html } from './utils'
 
 interface ArticleArgs {
@@ -34,7 +37,11 @@ export const Article = ({ article, about }: ArticleArgs) => html`<!DOCTYPE html>
                 <div aria-roledescription="article content">
                     ${article.htmlContent}
                 </div>
-                ${Series({ tag: article.tag, related: article.related })}
+                ${article.resolvedTag &&
+                Series({
+                    tag: article.resolvedTag!,
+                    related: article.related,
+                })}
             </article>
             ${Footer({ author: about.author })}
         </body>
