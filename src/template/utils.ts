@@ -36,3 +36,6 @@ function normalize(value: unknown): string {
 
     return String(value)
 }
+
+export const byDateDescSorter = (a: { date: string }, b: { date: string }) =>
+    new Date(b.date).getTime() - new Date(a.date).getTime()

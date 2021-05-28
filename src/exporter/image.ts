@@ -4,7 +4,7 @@ import paths from 'path'
 import { IImage } from '../types'
 
 export async function resizeImage(image: IImage, dist: string): Promise<void> {
-    if (global.args.skipImages) {
+    if (global.args.skipImages || image.originalPath.endsWith('.gif')) {
         fs.copyFile(image.originalPath, paths.join(dist, image.relativePath))
         return
     }

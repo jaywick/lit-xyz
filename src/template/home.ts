@@ -1,6 +1,6 @@
 import { Footer, Head, Header } from './components'
 import { IArticle } from '../types'
-import { html } from './utils'
+import { byDateDescSorter, html } from './utils'
 
 interface HomeArgs {
     articles: IArticle[]
@@ -8,7 +8,12 @@ interface HomeArgs {
 
 export const Home = ({ articles }: HomeArgs) => html`<!DOCTYPE html>
     <html lang="en">
-        ${Head({ title: 'Jay Wick' })}
+        ${Head({
+            title: 'Jay Wick',
+            description: '',
+            themeColor: '',
+            shouldIncludeCodeCss: false,
+        })}
         <body>
             ${Header()}
             <main>
@@ -22,7 +27,7 @@ export const Home = ({ articles }: HomeArgs) => html`<!DOCTYPE html>
                 <section>
                     <h2>Blog Posts</h2>
                     <ul>
-                        ${articles.sort(byDateDesc).map(
+                        ${articles.sort(byDateDescSorter).map(
                             ({ id, title, url }) => html`
                                 <li key="${id}">
                                     <a href="${url}">${title} </a>
@@ -32,9 +37,6 @@ export const Home = ({ articles }: HomeArgs) => html`<!DOCTYPE html>
                     </ul>
                 </section>
             </main>
-            ${Footer()}
+            ${Footer({ author: 'Jay Wick' })}
         </body>
     </html>`
-
-const byDateDesc = (a: IArticle, b: IArticle) =>
-    new Date(b.date).getTime() - new Date(a.date).getTime()

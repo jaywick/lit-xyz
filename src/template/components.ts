@@ -1,5 +1,5 @@
 import { IRelatedArticle } from '../types'
-import { html } from './utils'
+import { byDateDescSorter, html } from './utils'
 
 export const Logo = () => html`<svg
     class="main-logo"
@@ -44,7 +44,7 @@ export const Series = ({ tag, related }: SeriesArgs) => {
         <section class="series">
             <div>More articles about <strong class="tag">${tag}</strong></div>
             <ul>
-                ${related.map(
+                ${related.sort(byDateDescSorter).map(
                     ({ id, title, url, readableDate }) => html`
                         <li key="${id}">
                             <a href="${url}">${title}</a>
@@ -57,24 +57,33 @@ export const Series = ({ tag, related }: SeriesArgs) => {
     `
 }
 
-export const Footer = () =>
-    html`<footer>&copy; ${new Date().getFullYear()} Jay Wick</footer>`
+interface FooterArgs {
+    author: string
+}
+
+export const Footer = ({ author }: FooterArgs) =>
+    html`<footer>&copy; ${new Date().getFullYear()} ${author}</footer>`
 
 interface HeadArgs {
     title: string
+    description: string
+    themeColor: string
+    shouldIncludeCodeCss?: boolean
 }
 
-export const Head = ({ title }: HeadArgs) => html` <head>
+export const Head = ({
+    title,
+    description,
+    themeColor,
+    shouldIncludeCodeCss = false,
+}: HeadArgs) => html` <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-        name="description"
-        content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta name="theme-color" content="${themeColor}" />
+    <meta name="description" content="${description}" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
     <link
         rel="stylesheet"
         type="text/css"
@@ -93,16 +102,17 @@ export const Head = ({ title }: HeadArgs) => html` <head>
         type="text/css"
         href="//fonts.googleapis.com/css?family=Roboto+Slab&display=swap"
     />
-    <link
-        href="//unpkg.com/prism-theme-night-owl@1.4.0/build/style.css"
-        media="screen and (prefers-color-scheme: dark)"
-        rel="stylesheet"
-    />
-    <link
-        href="//unpkg.com/prism-theme-night-owl@1.4.0/build/light.css"
-        media="screen and (prefers-color-scheme: light)"
-        rel="stylesheet"
-    />
+    ${shouldIncludeCodeCss &&
+    html`<link
+            href="//unpkg.com/prism-theme-night-owl@1.4.0/build/style.css"
+            media="screen and (prefers-color-scheme: dark)"
+            rel="stylesheet"
+        />
+        <link
+            href="//unpkg.com/prism-theme-night-owl@1.4.0/build/light.css"
+            media="screen and (prefers-color-scheme: light)"
+            rel="stylesheet"
+        />`}
     <title>${title}</title>
 </head>`
 

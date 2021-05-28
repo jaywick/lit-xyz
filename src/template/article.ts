@@ -14,7 +14,7 @@ export const Article = ({
     related,
 }: IArticle) => html`<!DOCTYPE html>
     <html lang="en">
-        ${Head({ title })}
+        ${Head({ title, description: '', themeColor: '' })}
         <body>
             ${Header()}
             <article>
@@ -30,6 +30,6 @@ export const Article = ({
                 <div aria-roledescription="article content">${htmlContent}</div>
                 ${Series({ tag, related })}
             </article>
-            ${Footer()}
+            ${Footer({ author: 'Jay Wick' })}
         </body>
     </html>`
