@@ -1,28 +1,25 @@
 import { Footer, Head, Header } from './components'
-import { IArticle } from '../types'
+import { IAbout, IArticle } from '../types'
 import { byDateDescSorter, html } from './utils'
 
 interface HomeArgs {
     articles: IArticle[]
+    about: IAbout
 }
 
-export const Home = ({ articles }: HomeArgs) => html`<!DOCTYPE html>
+export const Home = ({ articles, about }: HomeArgs) => html`<!DOCTYPE html>
     <html lang="en">
         ${Head({
             title: 'Jay Wick',
-            description: '',
-            themeColor: '',
-            shouldIncludeCodeCss: false,
+            description: about.description,
+            themeColor: about.themeColor,
         })}
         <body>
             ${Header()}
             <main>
                 <section>
-                    <h1 class="title">Jay Wick</h1>
-                    <p class="tagline">
-                        UX developer, amateur designer, and technology
-                        apologist. This is my blog and portfolio.
-                    </p>
+                    <h1 class="title">${about.title}</h1>
+                    <p class="tagline">${about.tagline}</p>
                 </section>
                 <section>
                     <h2>Blog Posts</h2>
@@ -37,6 +34,6 @@ export const Home = ({ articles }: HomeArgs) => html`<!DOCTYPE html>
                     </ul>
                 </section>
             </main>
-            ${Footer({ author: 'Jay Wick' })}
+            ${Footer({ author: about.author })}
         </body>
     </html>`

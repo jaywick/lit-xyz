@@ -10,7 +10,9 @@
                 "--loader",
                 "ts-node/esm",
                 ".",
-                "--resolveJsonModule"
+                "--resolveJsonModule",
+                "--mock-data",
+                "--skip-images"
             ],
             "sourceMaps": true,
             "program": "${workspaceFolder}/src/index.ts",

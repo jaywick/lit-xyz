@@ -13,16 +13,22 @@ import { IArticle, IFrontmatter } from '../types'
 import { File } from './util'
 import { remarkVideo } from './plugins/remark-videos'
 import { lint } from './plugins/remark-lint-preset-xyz'
+import remarkStripMarkdown from 'strip-markdown'
 
 export async function resolveArticle(file: File): Promise<IArticle | null> {
     const id = file.parent.name
-    const markdown = await file.readContent()
-    const { content, data } = parseMarkdown(markdown)
-    const frontmatter = data as IFrontmatter
+    const markdownWithFrontmatter = await file.readContent()
+    const parsed = parseMarkdown(markdownWithFrontmatter)
 
-    await lint(file.path, markdown)
+    const frontmatter = parsed.data as IFrontmatter
 
-    const htmlContent = await transformMarkdown(content).catch((x) => {
+    const required = requirer(id)
+    const markdown = parsed.content
+    const excerptInMarkdown = parsed.excerpt!
+
+    await lint(file.path, markdownWithFrontmatter)
+
+    const htmlContent = await transformMarkdown(markdown).catch((x) => {
         console.error(x)
         return null
     })
@@ -31,28 +37,28 @@ export async function resolveArticle(file: File): Promise<IArticle | null> {
         return null
     }
 
-    const { title, date, tag, hero } = frontmatter
-
-    const { slug = slugify(title), heroAlt = '' } = frontmatter
+    const slug = frontmatter.slug || slugify(frontmatter.title)
 
     return {
-        title,
-        date,
-        tag,
-        hero,
-
         id,
-        author: 'Jay Wick',
-        slug,
-        heroAlt,
 
-        originalMarkdown: content,
-        readableDate: readableDate(date),
-        readTime: readTime(content),
+        title: required(frontmatter, 'title'),
+        date: required(frontmatter, 'date'),
+        tag: required(frontmatter, 'tag'),
+        hero: required(frontmatter, 'hero'),
+
+        author: frontmatter.author || '',
+        slug,
+        heroAlt: frontmatter.heroAlt || '',
+
+        originalMarkdown: markdown,
+        readableDate: readableDate(required(frontmatter, 'date')),
+        readTime: readTime(markdown),
         htmlContent,
-        heroStaticPath: `/blog/${id}/${hero}`,
-        url: `/blog/${id}/${slug}`,
+        heroStaticPath: `/blog/${id}/${frontmatter.hero}`,
+        url: `/blog/${id}/${frontmatter.slug}`,
         related: [],
+        excerpt: await plainText(excerptInMarkdown),
     }
 }
 
@@ -66,6 +72,18 @@ async function transformMarkdown(text: string): Promise<string> {
         .use(rehypeRaw)
         .use(rehypeStringify, { allowDangerousHtml: true })
         .use(rehypeLazyImages)
+
+    const result = await processor.process(text)
+    return String(result)
+}
+
+async function plainText(text: string): Promise<string> {
+    const processor = unified()
+        .use(remarkParse)
+        .use(remarkStripMarkdown)
+        .use(remarkRehype, { allowDangerousHtml: true })
+        .use(rehypeRaw)
+        .use(rehypeStringify, { allowDangerousHtml: true })
 
     const result = await processor.process(text)
     return String(result)
@@ -96,3 +114,14 @@ const slugify = (string: string) => {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '')
 }
+
+const requirer =
+    (id: string) =>
+    <U extends { [key: string]: any }>(obj: U, key: keyof U) => {
+        if (obj[key] == null || String(obj[key]).trim() === '') {
+            console.error(`Missing ${key} in ${id}`)
+            return ''
+        }
+
+        return obj[key]
+    }

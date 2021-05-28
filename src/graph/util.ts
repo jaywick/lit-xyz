@@ -1,5 +1,5 @@
 import paths from 'path'
-import { promises as fs } from 'fs'
+import { existsSync, promises as fs } from 'fs'
 
 class FileSystemObject {
     path: string
@@ -15,6 +15,13 @@ class FileSystemObject {
     get parent(): Directory {
         return new Directory(paths.dirname(this.path))
     }
+
+    ensureExists(): this {
+        if (!existsSync(this.path)) {
+            throw new Error(`File not found: ${this.path}`)
+        }
+        return this
+    }
 }
 
 export class File extends FileSystemObject {
@@ -26,6 +33,13 @@ export class File extends FileSystemObject {
         return String(await fs.readFile(this.path))
     }
 
+    isExtensionOneOf(...extensionsIncludingDot: string[]): boolean {
+        return extensionsIncludingDot.some(
+            (x) =>
+                x.toLocaleLowerCase() ===
+                paths.extname(this.path).toLocaleLowerCase()
+        )
+    }
     get extension(): string {
         return paths.extname(this.path)
     }

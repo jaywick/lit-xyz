@@ -31,7 +31,7 @@ export async function exportAll(graph: IGraph, dist: Directory) {
     })
 
     await reportProgress('Export home page', async () => {
-        const homeHtml = Home({ articles: graph.articles })
+        const homeHtml = Home({ articles: graph.articles, about: graph.about })
         const outputFile = paths.join(dist.path, 'index.html')
         !global.args.dryRun && (await fs.writeFile(outputFile, homeHtml))
     })
@@ -46,7 +46,7 @@ export async function exportAll(graph: IGraph, dist: Directory) {
                 })
             }
 
-            const articleHtml = Article(article)
+            const articleHtml = Article({ article, about: graph.about })
             const outputFile = new File(
                 dist.path,
                 'blog',

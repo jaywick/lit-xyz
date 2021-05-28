@@ -1,6 +1,6 @@
 import { exportAll } from './exporter'
 import { generateGraph } from './graph'
-import { Directory } from './graph/util'
+import { Directory, File } from './graph/util'
 import { Command } from 'commander'
 
 main()
@@ -24,14 +24,21 @@ async function main() {
 
     console.info('Running with options: ' + JSON.stringify(global.args))
 
-    const docs = new Directory(
-        __dirname,
-        global.args.mockData ? './mock-data/docs/articles/' : '../doc/articles'
-    )
-    const publics = new Directory(__dirname, '../public')
-    const graph = await generateGraph(docs, publics)
+    const publics = new Directory(__dirname, '../public').ensureExists()
+    let docs = new Directory(__dirname, '../doc/articles').ensureExists()
+    let about = new File(__dirname, '../doc/about.yml').ensureExists()
 
-    const dist = new Directory(__dirname, '../dist')
+    if (global.args.mockData) {
+        docs = new Directory(
+            __dirname,
+            './mock-data/docs/articles/'
+        ).ensureExists()
+        about = new File(__dirname, './mock-data/docs/about.yml').ensureExists()
+    }
+
+    const graph = await generateGraph(docs, about, publics)
+
+    const dist = new Directory(__dirname, '../dist').ensureExists()
     await exportAll(graph, dist)
 }
 

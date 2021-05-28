@@ -1,11 +1,17 @@
 import chalk from 'chalk'
-import { IGraph } from '../types'
+import { IArticle, IGraph } from '../types'
 import { resolveImage } from './image'
 import { resolveArticle } from './markdown'
-import { Directory } from './util'
+import { Directory, File } from './util'
+import { resolveAbout } from './yaml'
 
-export async function generateGraph(docs: Directory, publics: Directory) {
+export async function generateGraph(
+    docs: Directory,
+    about: File,
+    publics: Directory
+) {
     const graph: IGraph = {
+        about: await resolveAbout(about),
         articles: [],
         images: [],
         public: [],
@@ -15,17 +21,13 @@ export async function generateGraph(docs: Directory, publics: Directory) {
         if (subdirectory.path.startsWith('.')) continue
 
         for await (const file of subdirectory.files()) {
-            if (['.md', '.mdx'].includes(file.extension.toLowerCase())) {
+            if (file.isExtensionOneOf('.md', '.mdx')) {
                 const article = await resolveArticle(file)
 
                 if (article) {
                     graph.articles.push(article)
                 }
-            } else if (
-                ['.jpg', '.jpeg', '.png', '.gif'].includes(
-                    file.extension.toLowerCase()
-                )
-            ) {
+            } else if (file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')) {
                 const image = await resolveImage(file)
                 graph.images.push(image)
             } else {
@@ -35,9 +37,8 @@ export async function generateGraph(docs: Directory, publics: Directory) {
     }
 
     for await (const article of graph.articles) {
-        article.related = graph.articles.filter(
-            (x) => x.tag === article.tag && x.id !== article.id
-        )
+        article.author = article.author || graph.about.author
+        article.related = graph.articles.filter(bySameTagFilter(article))
     }
 
     for await (const file of publics.files()) {
@@ -56,3 +57,8 @@ function report(path: string, message: string) {
             message
     )
 }
+
+const bySameTagFilter =
+    (a: IArticle) =>
+    (b: IArticle): boolean =>
+        a.tag === b.tag && a.id !== b.id

@@ -1,35 +1,41 @@
-import { IArticle } from '../types'
+import { IAbout, IArticle } from '../types'
 import { Head, Series, Footer, Header } from './components'
 import { html } from './utils'
 
-export const Article = ({
-    title,
-    author,
-    readableDate,
-    readTime,
-    htmlContent,
-    heroStaticPath,
-    heroAlt,
-    tag,
-    related,
-}: IArticle) => html`<!DOCTYPE html>
+interface ArticleArgs {
+    article: IArticle
+    about: IAbout
+}
+
+export const Article = ({ article, about }: ArticleArgs) => html`<!DOCTYPE html>
     <html lang="en">
-        ${Head({ title, description: '', themeColor: '' })}
+        ${Head({
+            title: article.title,
+            description: article.excerpt,
+            themeColor: about.themeColor,
+            shouldIncludeCodeCss: true,
+        })}
         <body>
             ${Header()}
             <article>
-                <h1>${title}</h1>
+                <h1>${article.title}</h1>
                 <div class="byline">
-                    <address class="author">${author}</address>
+                    <address class="author">${article.author}</address>
                     &bull;
-                    <time datetime="{date}"> ${readableDate} </time>
+                    <time datetime="{date}"> ${article.readableDate} </time>
                     &bull;
-                    <span>${readTime} min read</span>
+                    <span>${article.readTime} min read</span>
                 </div>
-                <img class="hero" src="${heroStaticPath}" alt="${heroAlt}" />
-                <div aria-roledescription="article content">${htmlContent}</div>
-                ${Series({ tag, related })}
+                <img
+                    class="hero"
+                    src="${article.heroStaticPath}"
+                    alt="${article.heroAlt}"
+                />
+                <div aria-roledescription="article content">
+                    ${article.htmlContent}
+                </div>
+                ${Series({ tag: article.tag, related: article.related })}
             </article>
-            ${Footer({ author: 'Jay Wick' })}
+            ${Footer({ author: about.author })}
         </body>
     </html>`

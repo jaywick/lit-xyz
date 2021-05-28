@@ -1,4 +1,5 @@
 export type IGraph = {
+    about: IAbout
     articles: IArticle[]
     images: IImage[]
     public: IPublic[]
@@ -14,6 +15,15 @@ export interface IArticle extends IFrontmatter {
     originalMarkdown: string
     url: string
     related: IRelatedArticle[]
+    excerpt: string
+}
+
+export interface IAbout {
+    title: string
+    author: string
+    tagline: string
+    description: string
+    themeColor: string
 }
 
 export interface IFrontmatter {
