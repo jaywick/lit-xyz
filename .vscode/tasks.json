@@ -10,84 +10,11 @@
             "problemMatcher": "$tsc-watch"
         },
         {
-            "label": "$(run-all) Start",
-            "type": "shell",
-            "command": "yarn start",
-            "detail": "Runs an export in development mode with no image resizing then serves the content",
-            "problemMatcher": [
-                "$tsc",
-                {
-                    "applyTo": "allDocuments",
-                    "source": "Markdown lint",
-                    "pattern": [
-                        {
-                            "regexp": "^(.+):(\\d+)\\t(warn|error)\\s([a-z0-9-]+)\t(.+)$",
-                            "file": 1,
-                            "location": 2,
-                            "severity": 3,
-                            "code": 4,
-                            "message": 5
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "label": "$(run-all) Start mock data",
-            "type": "shell",
-            "command": "yarn start:sample",
-            "problemMatcher": [
-                "$tsc",
-                {
-                    "applyTo": "allDocuments",
-                    "source": "Markdown lint",
-                    "pattern": [
-                        {
-                            "regexp": "^(.+):(\\d+)\\t(warn|error)\\s([a-z0-9-]+)\t(.+)$",
-                            "file": 1,
-                            "location": 2,
-                            "severity": 3,
-                            "code": 4,
-                            "message": 5
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "label": "$(package) Export all",
-            "type": "shell",
-            "detail": "Builds a production folder /dist with all HTML and images",
-            "command": "yarn export",
-            "problemMatcher": "$tsc"
-        },
-        {
-            "label": "$(server-process) Serve",
-            "type": "shell",
-            "command": "yarn serve",
-            "problemMatcher": "$tsc"
-        },
-        {
-            "label": "$(report) Dryrun",
-            "type": "shell",
-            "command": "yarn dryrun",
-            "problemMatcher": [
-                {
-                    "applyTo": "allDocuments",
-                    "source": "Markdown lint",
-                    "fileLocation": "absolute",
-                    "pattern": [
-                        {
-                            "regexp": "^(.+):(\\d+)\\s+(warn|error)\\s+([a-z0-9\\-]+)\\s+(.+)$",
-                            "file": 1,
-                            "location": 2,
-                            "severity": 3,
-                            "code": 4,
-                            "message": 5
-                        }
-                    ]
-                }
-            ]
+            "type": "npm",
+            "script": "start",
+            "problemMatcher": ["$tsc"],
+            "label": "npm: start",
+            "detail": "Export mock data, skipping images and start a watch server"
         }
     ]
 }

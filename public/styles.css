@@ -268,7 +268,7 @@ header {
 }
 
 .series .subtitle {
-    color: var(--theme-subtitle);
+    color: var(--theme-grey);
     margin-left: 0.5rem;
 }
 

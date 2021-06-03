@@ -19,7 +19,6 @@ export const Head = ({
     <meta name="theme-color" content="${themeColor}" />
     <meta name="description" content="${description}" />
     <link rel="apple-touch-icon" href="/logo192.png" />
-    <link rel="manifest" href="/manifest.json" />
     <link
         rel="stylesheet"
         type="text/css"

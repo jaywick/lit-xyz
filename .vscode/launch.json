@@ -12,7 +12,8 @@
                 ".",
                 "--resolveJsonModule",
                 "--mock-data",
-                "--skip-images"
+                "--skip-images",
+                "--serve"
             ],
             "sourceMaps": true,
             "program": "${workspaceFolder}/src/index.ts",

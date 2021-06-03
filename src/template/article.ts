@@ -2,6 +2,7 @@ import { IAbout, IArticle, ITag } from '../types'
 import { Footer } from './components/footer'
 import { Head } from './components/head'
 import { Header } from './components/header'
+import { Hero } from './components/hero'
 import { Series } from './components/series'
 import { html } from './utils'
 
@@ -29,11 +30,7 @@ export const Article = ({ article, about }: ArticleArgs) => html`<!DOCTYPE html>
                     &bull;
                     <span>${article.readTime} min read</span>
                 </div>
-                <img
-                    class="hero"
-                    src="${article.heroStaticPath}"
-                    alt="${article.heroAlt}"
-                />
+                ${Hero({ url: article.heroStaticPath, alt: article.heroAlt })}
                 <div aria-roledescription="article content">
                     ${article.htmlContent}
                 </div>

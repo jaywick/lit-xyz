@@ -5,18 +5,20 @@
     "license": "MIT",
     "scripts": {
         "typecheck": "tsc -p . --noEmit",
-        "export": "node --loader ts-node/esm . --resolveJsonModule",
-        "serve": "serve ./dist",
-        "start:sample": "yarn export --mock-data --skip-images; yarn serve",
-        "start": "yarn export --skip-images; yarn serve",
-        "dryrun": "yarn export --dry-run"
+        "entry": "node --loader ts-node/esm . --resolveJsonModule",
+        "entry:watch": "nodemon --watch src/template -e ts --loader ts-node/esm . --resolveJsonModule",
+        "export:skip-images": "yarn entry --skip-images --serve",
+        "export:dry-run": "yarn entry --dry-run",
+        "start": "yarn entry:watch --mock-data --skip-images --serve"
     },
     "dependencies": {
         "@types/node": "^15.0.2",
         "chalk": "^4.1.1",
+        "chokidar": "^3.5.1",
         "commander": "^7.2.0",
         "gray-matter": "^4.0.3",
         "jimp": "^0.16.1",
+        "nodemon": "^2.0.7",
         "ora": "^5.4.0",
         "rehype-raw": "^5.1.0",
         "rehype-stringify": "^8.0.0",

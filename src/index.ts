@@ -2,6 +2,8 @@ import { exportAll } from './exporter'
 import { generateGraph } from './graph'
 import { Directory, File } from './graph/util'
 import { Command } from 'commander'
+import { serve } from './serve'
+import util from 'util'
 
 main()
 
@@ -18,6 +20,7 @@ async function main() {
             'run commands without making changes to filesystem',
             false
         )
+        .option('--serve', 'serves generated items for local testing', false)
         .allowUnknownOption(true)
         .parse(process.argv)
         .opts() as IArgs
@@ -41,13 +44,31 @@ async function main() {
     const graph = await generateGraph({ docs, tags, about, publics })
 
     const dist = new Directory(__dirname, '../dist')
-    await exportAll(graph, dist)
+
+    if (global.args.serve) {
+        const cache = new File(__dirname, '../.graph')
+
+        const prevCache = await cache.readContentOrEmpty()
+        if (prevCache !== util.inspect(cache)) {
+            console.log('Graph content unchanged, export skipped')
+        } else {
+            await exportAll(graph, dist)
+        }
+
+        cache.writeContent(util.inspect(graph))
+
+        await serve(dist)
+    } else {
+        await exportAll(graph, dist)
+    }
 }
 
 interface IArgs {
     skipImages: boolean
     mockData: boolean
     dryRun: boolean
+    serve: boolean
+    watch: boolean
 }
 
 declare global {

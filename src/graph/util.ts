@@ -1,7 +1,7 @@
 import paths from 'path'
-import { existsSync, promises as fs } from 'fs'
+import { existsSync, lstatSync, promises as fs } from 'fs'
 
-class FileSystemObject {
+abstract class FileSystemObject {
     path: string
 
     constructor(...pathParts: string[]) {
@@ -22,6 +22,8 @@ class FileSystemObject {
         }
         return this
     }
+
+    abstract exists(): boolean
 }
 
 export class File extends FileSystemObject {
@@ -33,6 +35,18 @@ export class File extends FileSystemObject {
         return String(await fs.readFile(this.path))
     }
 
+    async readContentOrEmpty(): Promise<string> {
+        if (!this.exists()) {
+            return ''
+        }
+
+        return this.readContent()
+    }
+
+    async streamContent(): Promise<Buffer> {
+        return fs.readFile(this.path)
+    }
+
     isExtensionOneOf(...extensionsIncludingDot: string[]): boolean {
         return extensionsIncludingDot.some(
             (x) =>
@@ -40,8 +54,18 @@ export class File extends FileSystemObject {
                 paths.extname(this.path).toLocaleLowerCase()
         )
     }
+
     get extension(): string {
         return paths.extname(this.path)
+    }
+
+    exists(): boolean {
+        try {
+            const stat = lstatSync(this.path)
+            return stat.isFile()
+        } catch {
+            return false
+        }
     }
 }
 
@@ -65,6 +89,15 @@ export class Directory extends FileSystemObject {
             if (stat.isFile()) {
                 yield new File(childPath)
             }
+        }
+    }
+
+    exists(): boolean {
+        try {
+            const stat = lstatSync(this.path)
+            return stat.isDirectory()
+        } catch {
+            return false
         }
     }
 }
