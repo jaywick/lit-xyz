@@ -32,10 +32,10 @@ export const Head = ({
         media="screen and (prefers-color-scheme: light)"
     />
     <link rel="stylesheet" type="text/css" href="/styles.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,500;1,300;1,500&display=swap"
         rel="stylesheet"
-        type="text/css"
-        href="//fonts.googleapis.com/css?family=Roboto+Slab&display=swap"
     />
     ${shouldIncludeCodeCss &&
     html`<link

@@ -1,9 +1,7 @@
 :root {
-    --typography-headings: 'Roboto Slab', Georgia, serif;
-    --typography-content: -apple-system, system-ui, 'San Francisco',
-        'Helvetica Neue', Helvetica, Ubuntu, Roboto, Noto, 'Segoe UI', Arial,
-        sans-serif;
-    --typography-code: 'Roboto Slab', Georgia, serif;
+    --typography-headings: 'IBM Plex Mono Light';
+    --typography-content: 'IBM Plex Mono Light';
+    --typography-code: 'IBM Plex Mono Light';
 }
 
 html {
@@ -42,6 +40,7 @@ h4,
 h5,
 h6 {
     font-family: var(--typography-headings);
+    font-style: italic;
 }
 
 article,

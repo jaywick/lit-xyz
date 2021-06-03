@@ -6,7 +6,7 @@
     "scripts": {
         "typecheck": "tsc -p . --noEmit",
         "entry": "node --loader ts-node/esm . --resolveJsonModule",
-        "entry:watch": "nodemon --watch src/template -e ts --loader ts-node/esm . --resolveJsonModule",
+        "entry:watch": "nodemon --watch src --watch public --watch  doc -e ts,css --loader ts-node/esm . --resolveJsonModule",
         "export:skip-images": "yarn entry --skip-images --serve",
         "export:dry-run": "yarn entry --dry-run",
         "start": "yarn entry:watch --mock-data --skip-images --serve"
@@ -14,7 +14,6 @@
     "dependencies": {
         "@types/node": "^15.0.2",
         "chalk": "^4.1.1",
-        "chokidar": "^3.5.1",
         "commander": "^7.2.0",
         "gray-matter": "^4.0.3",
         "jimp": "^0.16.1",
