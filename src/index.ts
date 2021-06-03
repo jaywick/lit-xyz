@@ -45,21 +45,10 @@ async function main() {
 
     const dist = new Directory(__dirname, '../dist')
 
+    await exportAll(graph, dist)
+
     if (global.args.serve) {
-        const cache = new File(__dirname, '../.graph')
-
-        const prevCache = await cache.readContentOrEmpty()
-        if (prevCache !== util.inspect(cache)) {
-            console.log('Graph content unchanged, export skipped')
-        } else {
-            await exportAll(graph, dist)
-        }
-
-        cache.writeContent(util.inspect(graph))
-
         await serve(dist)
-    } else {
-        await exportAll(graph, dist)
     }
 }
 
