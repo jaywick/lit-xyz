@@ -8,10 +8,15 @@ import { IImage } from '../types'
 interface Args {
     image: IImage
     dist: Directory
+    skipResize: boolean
 }
 
-export async function resizeImage({ image, dist }: Args): Promise<void> {
-    if (global.args.skipImages || image.originalPath.endsWith('.gif')) {
+export async function resizeImage({
+    image,
+    dist,
+    skipResize,
+}: Args): Promise<void> {
+    if (skipResize || image.originalPath.endsWith('.gif')) {
         await fs.copyFile(
             image.originalPath,
             paths.join(dist.path, image.relativePath)

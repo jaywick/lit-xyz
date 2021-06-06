@@ -16,7 +16,10 @@ import { lint } from './plugins/remark-lint-preset-xyz'
 import remarkStripMarkdown from 'strip-markdown'
 import { log } from '../reporter'
 
-export async function resolveArticle(file: File): Promise<IArticle | null> {
+export async function resolveArticle(
+    file: File,
+    skipLint: boolean
+): Promise<IArticle | null> {
     const id = file.parent.name
     const markdownWithFrontmatter = await file.readContent()
     const parsed = parseMarkdown(markdownWithFrontmatter)
@@ -26,7 +29,7 @@ export async function resolveArticle(file: File): Promise<IArticle | null> {
     const markdown = parsed.content
     const excerptInMarkdown = parsed.excerpt!
 
-    if (!global.args.skipLint) {
+    if (!skipLint) {
         await lint(file.path, markdownWithFrontmatter)
     }
 

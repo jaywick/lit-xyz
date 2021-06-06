@@ -1,21 +1,18 @@
-import { log, withProgress } from '../reporter'
-import { IArticle, IGraph, ITag } from '../types'
+import Listr from 'listr'
+import { IContext } from '..'
+import { log } from '../reporter'
+import { IArticle, ITag } from '../types'
 import { resolveImage } from './image'
 import { resolveArticle } from './markdown'
-import { Directory, File, nil } from './util'
+import { File, nil } from './util'
 import { resolveAbout, resolveTags } from './yaml'
 
-interface Args {
-    docs: Directory
-    tags: Directory
-    about: File
-    publics: Directory
-}
+export async function generateGraph(context: IContext) {
+    const { tags, about } = context.filesystem
 
-export async function generateGraph({ docs, tags, about, publics }: Args) {
     const tagFile = new File(tags.path, 'tags.yml').ensureExists()
 
-    const graph: IGraph = {
+    context.graph = {
         about: await resolveAbout(about),
         tags: await resolveTags(tagFile),
         articles: [],
@@ -23,48 +20,73 @@ export async function generateGraph({ docs, tags, about, publics }: Args) {
         public: [],
     }
 
-    await withProgress('Generating data graph', async () => {
-        for await (const subdirectory of docs.subdirectories()) {
-            if (subdirectory.path.startsWith('.')) continue
+    return new Listr([
+        { title: 'Process article folders', task: processArticleFolders },
+        {
+            title: 'Populate cross referenced data',
+            task: crossReferenceArticles,
+        },
+        {
+            title: 'Collect public files',
+            task: collectPublicFiles,
+        },
+    ])
+}
 
-            for await (const file of subdirectory.files()) {
-                if (file.isExtensionOneOf('.md', '.mdx')) {
-                    const article = await resolveArticle(file)
+async function processArticleFolders(context: IContext) {
+    const {
+        filesystem: { docs },
+        args: { skipImages },
+        graph,
+    } = context
 
-                    if (article) {
-                        graph.articles.push(article)
-                    }
-                } else if (
-                    file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')
-                ) {
-                    const image = await resolveImage(file)
-                    graph.images.push(image)
-                } else {
-                    log('WARN', {
-                        message: 'Ignoring unknown file extension',
-                        data: { extension: file.extension },
-                        filepath: file.path,
-                    })
+    for await (const subdirectory of docs.subdirectories()) {
+        if (subdirectory.path.startsWith('.')) continue
+
+        for await (const file of subdirectory.files()) {
+            if (file.isExtensionOneOf('.md', '.mdx')) {
+                const article = await resolveArticle(file, skipImages)
+
+                if (article) {
+                    graph.articles.push(article)
                 }
+            } else if (file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')) {
+                const image = await resolveImage(file)
+                graph.images.push(image)
+            } else {
+                log('WARN', {
+                    message: 'Ignoring unknown file extension',
+                    data: { extension: file.extension },
+                    filepath: file.path,
+                })
             }
         }
+    }
+}
 
-        const matchTags = tagMatcher(graph.tags)
-        for await (const article of graph.articles) {
-            article.author = article.author || graph.about.author
-            article.resolvedTag = matchTags(article.tag, article.originalPath)
-        }
+async function crossReferenceArticles(context: IContext) {
+    const { graph } = context
 
-        for await (const article of graph.articles) {
-            article.related = graph.articles.filter(bySameTagFilter(article))
-        }
+    const matchTags = tagMatcher(graph.tags)
+    for await (const article of graph.articles) {
+        article.author = article.author || graph.about.author
+        article.resolvedTag = matchTags(article.tag, article.originalPath)
+    }
 
-        for await (const file of publics.files()) {
-            graph.public.push({ originalPath: file.path })
-        }
-    })
+    for await (const article of graph.articles) {
+        article.related = graph.articles.filter(bySameTagFilter(article))
+    }
+}
 
-    return graph
+async function collectPublicFiles(context: IContext) {
+    const {
+        filesystem: { publics },
+        graph,
+    } = context
+
+    for await (const file of publics.files()) {
+        graph.public.push({ originalPath: file.path })
+    }
 }
 
 const bySameTagFilter = (a: IArticle) => (b: IArticle) =>

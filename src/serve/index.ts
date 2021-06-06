@@ -1,47 +1,51 @@
 import { createServer } from 'http'
+import { ListrTask } from 'listr'
+import { IContext } from '..'
 import { Directory, File } from '../graph/util'
-import { log, withProgress } from '../reporter'
 
 interface Args {
     dist: Directory
 }
 
-export async function serve({ dist }: Args) {
-    await withProgress('Serving content locally for testing', async () => {
-        const server = createServer(async (req, res) => {
-            if (!req.url) {
-                console.error(`URL expected. Was empty`)
-                return res.end(400)
-            }
+export async function serve(context: IContext) {
+    const {
+        filesystem: { dist },
+        args: { serve },
+    } = context
 
-            const path = req.url.slice(1) // removes leading `/`
+    const server = createServer(async (req, res) => {
+        if (!req.url) {
+            console.error(`URL expected. Was empty`)
+            return res.end(400)
+        }
 
-            const exactFile = new File(dist.path, path)
+        const path = req.url.slice(1) // removes leading `/`
 
-            if (exactFile.exists()) {
-                return res.end(await exactFile.streamContent())
-            }
+        const exactFile = new File(dist.path, path)
 
-            const indexFile = new File(dist.path, path, 'index.html')
+        if (exactFile.exists()) {
+            return res.end(await exactFile.streamContent())
+        }
 
-            if (indexFile.exists()) {
-                const data = await indexFile.streamContent()
-                return res.end(data)
-            }
+        const indexFile = new File(dist.path, path, 'index.html')
 
-            const addHtml = new File(dist.path, `${path}.html`)
+        if (indexFile.exists()) {
+            const data = await indexFile.streamContent()
+            return res.end(data)
+        }
 
-            if (addHtml.exists()) {
-                const data = await addHtml.streamContent()
-                return res.end(data)
-            }
+        const addHtml = new File(dist.path, `${path}.html`)
 
-            // catch all for not-found
-            console.error(`404 Not Found: ${req.url}`)
-            res.writeHead(404)
-            return res.end()
-        })
+        if (addHtml.exists()) {
+            const data = await addHtml.streamContent()
+            return res.end(data)
+        }
 
-        server.listen(8000)
+        // catch all for not-found
+        console.error(`404 Not Found: ${req.url}`)
+        res.writeHead(404)
+        return res.end()
     })
+
+    server.listen(8000)
 }

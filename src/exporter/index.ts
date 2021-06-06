@@ -3,80 +3,94 @@ import paths from 'path'
 import { Home } from '../template/home'
 import { resizeImage } from './image'
 import { Article } from '../template/article'
-import { IGraph } from '../types'
-import { withProgress } from '../reporter'
-import { Directory } from '../graph/util'
 import { List } from '../template/list'
+import { IContext } from '..'
+import Listr, { ListrTask } from 'listr'
 
-interface Args {
-    graph: IGraph
-    dist: Directory
-}
+export async function exportAll(context: IContext) {
+    const {
+        graph,
+        filesystem: { dist },
+        args: { skipExport },
+    } = context
 
-export async function exportAll({ graph, dist }: Args) {
-    await withProgress('Clear and recreate output folders', async () => {
-        await dist.deleteAllDescendants()
-        dist.subdirectory('blog').createIfMissing()
-        dist.subdirectory('tag').createIfMissing()
-    })
+    return new Listr<IContext>([
+        {
+            title: 'Clear and recreate output folders',
+            task: async () => {
+                await dist.deleteAllDescendants()
+                dist.subdirectory('blog').createIfMissing()
+                dist.subdirectory('tag').createIfMissing()
+            },
+        },
+        {
+            title: 'Copying public files verbatim',
+            task: async () => {
+                for (const file of graph.public) {
+                    const destinationFile = paths.join(
+                        dist.path,
+                        paths.basename(file.originalPath)
+                    )
+                    await fs.copyFile(file.originalPath, destinationFile)
+                }
+            },
+        },
+        {
+            title: 'Export home page',
+            task: async () => {
+                await dist
+                    .file('index.html')
+                    .writeContent(
+                        Home({ articles: graph.articles, about: graph.about })
+                    )
+            },
+        },
+        {
+            title: 'Export lists',
+            task: async () => {
+                await dist.file('blog', 'index.html').writeContent(
+                    List({
+                        articles: graph.articles,
+                        about: graph.about,
+                    })
+                )
 
-    await withProgress('Copying public files verbatim', async (progress) => {
-        for (const file of graph.public) {
-            progress(graph.public.length)
-            const destinationFile = paths.join(
-                dist.path,
-                paths.basename(file.originalPath)
-            )
-            await fs.copyFile(file.originalPath, destinationFile)
-        }
-    })
+                for (const tag of graph.tags) {
+                    await dist.file('tag', `${tag.key}.html`).writeContent(
+                        List({
+                            articles: graph.articles,
+                            about: graph.about,
+                            tag,
+                        })
+                    )
+                }
+            },
+        },
+        {
+            title: 'Export articles',
+            task: async () => {
+                for (const article of graph.articles) {
+                    const articleFolder = await dist
+                        .subdirectory('blog', article.id)
+                        .createIfMissing()
 
-    await withProgress('Export home page', async () => {
-        await dist
-            .file('index.html')
-            .writeContent(
-                Home({ articles: graph.articles, about: graph.about })
-            )
-    })
-
-    await withProgress('Export lists', async (progress) => {
-        await dist.file('blog', 'index.html').writeContent(
-            List({
-                articles: graph.articles,
-                about: graph.about,
-            })
-        )
-
-        for (const tag of graph.tags) {
-            progress(graph.tags.length)
-            await dist.file('tag', `${tag.key}.html`).writeContent(
-                List({
-                    articles: graph.articles,
-                    about: graph.about,
-                    tag,
-                })
-            )
-        }
-    })
-
-    await withProgress('Export articles', async (progress) => {
-        for (const article of graph.articles) {
-            progress(graph.articles.length)
-
-            const articleFolder = await dist
-                .subdirectory('blog', article.id)
-                .createIfMissing()
-
-            await articleFolder
-                .file(`${article.slug}.html`)
-                .writeContent(Article({ article, about: graph.about }))
-        }
-    })
-
-    await withProgress('Export optimized images', async (progress) => {
-        for await (const image of graph.images) {
-            progress(graph.images.length)
-            await resizeImage({ image, dist })
-        }
-    })
+                    await articleFolder
+                        .file(`${article.slug}.html`)
+                        .writeContent(Article({ article, about: graph.about }))
+                }
+            },
+        },
+        {
+            title: 'Export optimized images',
+            task: async ({ args }) => {
+                for await (const image of graph.images) {
+                    await resizeImage({
+                        image,
+                        dist,
+                        skipResize: args.skipImages,
+                    })
+                }
+            },
+        },
+    ])
 }
