@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import { log, withProgress } from '../reporter'
 import { IArticle, IGraph, ITag } from '../types'
 import { resolveImage } from './image'
 import { resolveArticle } from './markdown'
@@ -23,50 +23,48 @@ export async function generateGraph({ docs, tags, about, publics }: Args) {
         public: [],
     }
 
-    for await (const subdirectory of docs.subdirectories()) {
-        if (subdirectory.path.startsWith('.')) continue
+    await withProgress('Generating data graph', async () => {
+        for await (const subdirectory of docs.subdirectories()) {
+            if (subdirectory.path.startsWith('.')) continue
 
-        for await (const file of subdirectory.files()) {
-            if (file.isExtensionOneOf('.md', '.mdx')) {
-                const article = await resolveArticle(file)
+            for await (const file of subdirectory.files()) {
+                if (file.isExtensionOneOf('.md', '.mdx')) {
+                    const article = await resolveArticle(file)
 
-                if (article) {
-                    graph.articles.push(article)
+                    if (article) {
+                        graph.articles.push(article)
+                    }
+                } else if (
+                    file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')
+                ) {
+                    const image = await resolveImage(file)
+                    graph.images.push(image)
+                } else {
+                    log('WARN', {
+                        message: 'Ignoring unknown file extension',
+                        data: { extension: file.extension },
+                        filepath: file.path,
+                    })
                 }
-            } else if (file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')) {
-                const image = await resolveImage(file)
-                graph.images.push(image)
-            } else {
-                report(file.path, 'Ignoring unknown file path')
             }
         }
-    }
 
-    const matchTags = tagMatcher(graph.tags)
-    for await (const article of graph.articles) {
-        article.author = article.author || graph.about.author
-        article.resolvedTag = matchTags(article.tag)
-    }
+        const matchTags = tagMatcher(graph.tags)
+        for await (const article of graph.articles) {
+            article.author = article.author || graph.about.author
+            article.resolvedTag = matchTags(article.tag, article.originalPath)
+        }
 
-    for await (const article of graph.articles) {
-        article.related = graph.articles.filter(bySameTagFilter(article))
-    }
+        for await (const article of graph.articles) {
+            article.related = graph.articles.filter(bySameTagFilter(article))
+        }
 
-    for await (const file of publics.files()) {
-        graph.public.push({ originalPath: file.path })
-    }
+        for await (const file of publics.files()) {
+            graph.public.push({ originalPath: file.path })
+        }
+    })
 
     return graph
-}
-
-function report(path: string, message: string) {
-    console.warn(
-        chalk.cyan(path) +
-            chalk.yellow(':') +
-            ' - ' +
-            chalk.red('warn ') +
-            message
-    )
 }
 
 const bySameTagFilter = (a: IArticle) => (b: IArticle) =>
@@ -77,7 +75,7 @@ const bySameTagFilter = (a: IArticle) => (b: IArticle) =>
 
 const tagMatcher =
     (tags: ITag[]) =>
-    (tag: string | nil): ITag | null => {
+    (tag: string | nil, originalPath: string): ITag | null => {
         if (tag == null) return null
         if (tags.length === 0) return null
 
@@ -87,6 +85,10 @@ const tagMatcher =
         const aliasMatch = tags.find((t) => t.aliases.includes(tag))
         if (aliasMatch) return aliasMatch
 
-        console.error(`Missing tag '${tag}' in tags`)
+        log('WARN', {
+            message: 'Unknown tag could not be matched from tags list',
+            data: { tag },
+            filepath: originalPath,
+        })
         return null
     }

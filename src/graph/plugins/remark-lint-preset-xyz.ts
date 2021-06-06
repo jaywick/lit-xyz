@@ -1,6 +1,5 @@
 import remark from 'remark'
 
-import { VFile } from 'vfile'
 import chalk from 'chalk'
 // @ts-ignore
 import remarkLintBlockquoteIndentation from 'remark-lint-blockquote-indentation'
@@ -111,17 +110,7 @@ import remarkLintTablePipes from 'remark-lint-table-pipes'
 // @ts-ignore
 import remarkLintUnorderedListMarkerStyle from 'remark-lint-unordered-list-marker-style'
 import remarkLintNoIllegalHtml from './remark-lint-no-illegal-html'
-
-const requirer =
-    (context: string) =>
-    <T extends {}>(obj: T, key: keyof T) => {
-        if (obj[key] == null || String(obj[key]).trim() === '') {
-            console.error(`Missing ${key} in ${context}`)
-            return ''
-        }
-
-        return obj[key]
-    }
+import { log } from '../../reporter'
 
 export const lint = async (path: string, markdown: string) => {
     const vfile = await remark()
@@ -182,8 +171,7 @@ export const lint = async (path: string, markdown: string) => {
         .use(remarkLintUnorderedListMarkerStyle)
         .process(markdown)
 
-    const reports = report(path, vfile)
-    reports && console.warn(reports)
+    vfile.messages.length > 0 && log('WARN', { filepath: path, vfile })
 }
 
 // export const remarkLintImages = () => {
@@ -240,20 +228,3 @@ export const lint = async (path: string, markdown: string) => {
 
 //     return !text.trim()
 // }
-
-const report = (path: string, vfile: VFile): string => {
-    return vfile.messages
-        .map((entry) =>
-            [
-                chalk.cyan(path),
-                entry.line && chalk.yellowBright(`:${entry.line}`),
-                '\t',
-                chalk.yellow('warn '),
-                chalk.gray(entry.ruleId + '\t'),
-                entry.message,
-            ]
-                .filter(Boolean)
-                .join('')
-        )
-        .join('\n')
-}

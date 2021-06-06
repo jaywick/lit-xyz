@@ -14,6 +14,7 @@ export interface IArticle extends IFrontmatter {
     htmlContent: string
     heroStaticPath: string
     originalMarkdown: string
+    originalPath: string
     url: string
     related: IRelatedArticle[]
     excerpt: string

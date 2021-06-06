@@ -1,15 +1,25 @@
 import { promises as fs } from 'fs'
 import Jimp from 'jimp'
 import paths from 'path'
+import { Directory } from '../graph/util'
+import { log } from '../reporter'
 import { IImage } from '../types'
 
-export async function resizeImage(image: IImage, dist: string): Promise<void> {
+interface Args {
+    image: IImage
+    dist: Directory
+}
+
+export async function resizeImage({ image, dist }: Args): Promise<void> {
     if (global.args.skipImages || image.originalPath.endsWith('.gif')) {
-        fs.copyFile(image.originalPath, paths.join(dist, image.relativePath))
+        await fs.copyFile(
+            image.originalPath,
+            paths.join(dist.path, image.relativePath)
+        )
         return
     }
 
-    const outputFolder = paths.resolve(dist, image.relativePath, '..')
+    const outputFolder = paths.resolve(dist.path, image.relativePath, '..')
 
     await Promise.allSettled([
         resize(image.originalPath, outputFolder, [320, 320], '-320w'),
@@ -38,7 +48,7 @@ async function resize(
         const image = await Jimp.read(filepath)
         await image.scaleToFit(width, height).quality(100).writeAsync(newPath)
     } catch (err) {
-        console.error(`Failed to resize ${filepath}`)
+        log('ERROR', { message: `Failed to resize`, filepath })
         throw err
     }
 }

@@ -10,10 +10,11 @@ import unified from 'unified'
 import parseMarkdown from 'gray-matter'
 import { rehypeLazyImages } from './plugins/rehype-lazy-images'
 import { IArticle, IFrontmatter } from '../types'
-import { File, required } from './util'
+import { File, requirer } from './util'
 import { remarkVideo } from './plugins/remark-videos'
 import { lint } from './plugins/remark-lint-preset-xyz'
 import remarkStripMarkdown from 'strip-markdown'
+import { log } from '../reporter'
 
 export async function resolveArticle(file: File): Promise<IArticle | null> {
     const id = file.parent.name
@@ -29,8 +30,8 @@ export async function resolveArticle(file: File): Promise<IArticle | null> {
         await lint(file.path, markdownWithFrontmatter)
     }
 
-    const htmlContent = await transformMarkdown(markdown).catch((x) => {
-        console.error(x)
+    const htmlContent = await transformMarkdown(markdown).catch((err) => {
+        log('ERROR', { message: err.message, data: err })
         return null
     })
 
@@ -40,31 +41,23 @@ export async function resolveArticle(file: File): Promise<IArticle | null> {
 
     const slug = frontmatter.slug || slugify(frontmatter.title)
 
+    const required = requirer(file.path)
+
     return {
         id,
 
-        title: required(
-            frontmatter.title,
-            `Missing 'title' in tag Article #${id}`
-        ),
-        date: required(
-            frontmatter.date,
-            `Missing 'date' in tag Article #${id}`
-        ),
-        tag: required(frontmatter.tag, `Missing 'tag' in tag Article #${id}`),
-        hero: required(
-            frontmatter.hero,
-            `Missing 'hero' in tag Article #${id}`
-        ),
+        title: required(frontmatter.title, `title`),
+        date: required(frontmatter.date, `date`),
+        tag: required(frontmatter.tag, `tag`),
+        hero: required(frontmatter.hero, `hero`),
 
         author: frontmatter.author || '',
         slug,
         heroAlt: frontmatter.heroAlt || '',
 
         originalMarkdown: markdown,
-        readableDate: readableDate(
-            required(frontmatter.date, `Missing 'date' in tag Article #${id}`)
-        ),
+        originalPath: file.path,
+        readableDate: readableDate(required(frontmatter.date, `date`)),
         readTime: readTime(markdown),
         htmlContent,
         heroStaticPath: `/blog/${id}/${frontmatter.hero}`,

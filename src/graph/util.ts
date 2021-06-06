@@ -1,5 +1,6 @@
 import paths from 'path'
 import { existsSync, lstatSync, promises as fs } from 'fs'
+import { log } from '../reporter'
 
 abstract class FileSystemObject {
     path: string
@@ -70,6 +71,24 @@ export class File extends FileSystemObject {
 }
 
 export class Directory extends FileSystemObject {
+    async createIfMissing() {
+        await fs.mkdir(this.path, { recursive: true })
+        return this
+    }
+
+    async deleteAllDescendants() {
+        await fs.rmdir(this.path, { recursive: true })
+        await fs.mkdir(this.path, { recursive: true })
+    }
+
+    subdirectory(...pathParts: string[]) {
+        return new Directory(this.path, ...pathParts)
+    }
+
+    file(...pathParts: string[]) {
+        return new File(this.path, ...pathParts)
+    }
+
     async *subdirectories() {
         for (const child of await fs.readdir(this.path)) {
             const childPath = paths.resolve(this.path, child)
@@ -102,9 +121,13 @@ export class Directory extends FileSystemObject {
     }
 }
 
-export const required = (value: any, errorMessageIfMissing: string) => {
+export const requirer = (path: string) => (value: any, key: string) => {
     if (value == null || String(value).trim() === '') {
-        console.error(errorMessageIfMissing)
+        log('ERROR', {
+            message: `Missing value for required key`,
+            filepath: path,
+            data: { key },
+        })
         return ''
     }
 
