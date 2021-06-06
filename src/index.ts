@@ -16,11 +16,7 @@ async function main() {
             'process mock data instead of actual articles',
             false
         )
-        .option(
-            '--dry-run',
-            'run commands without making changes to filesystem',
-            false
-        )
+        .option('--skip-export', 'skips export to file system step', false)
         .option('--serve', 'serves generated items for local testing', false)
         .option('--serve-only', 'only serves and never runs anything', false)
         .allowUnknownOption(true)
@@ -47,7 +43,10 @@ async function main() {
 
     if (!global.args.serveOnly) {
         const graph = await generateGraph({ docs, tags, about, publics })
-        await exportAll(graph, dist)
+
+        if (!global.args.skipExport) {
+            await exportAll(graph, dist)
+        }
     }
 
     if (global.args.serveOnly || global.args.serve) {
@@ -58,9 +57,9 @@ async function main() {
 interface IArgs {
     skipImages: boolean
     mockData: boolean
-    dryRun: boolean
     serve: boolean
     watch: boolean
+    skipExport: boolean
     serveOnly: boolean
     skipLint: boolean
 }
