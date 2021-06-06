@@ -10,6 +10,7 @@ main()
 async function main() {
     global.args = new Command()
         .option('--skip-images', 'skip image processing', false)
+        .option('--skip-lint', 'skip markdown linting', false)
         .option(
             '--mock-data',
             'process mock data instead of actual articles',
@@ -21,6 +22,7 @@ async function main() {
             false
         )
         .option('--serve', 'serves generated items for local testing', false)
+        .option('--serve-only', 'only serves and never runs anything', false)
         .allowUnknownOption(true)
         .parse(process.argv)
         .opts() as IArgs
@@ -41,13 +43,14 @@ async function main() {
         about = new File(__dirname, './mock-data/docs/about.yml').ensureExists()
     }
 
-    const graph = await generateGraph({ docs, tags, about, publics })
-
     const dist = new Directory(__dirname, '../dist')
 
-    await exportAll(graph, dist)
+    if (!global.args.serveOnly) {
+        const graph = await generateGraph({ docs, tags, about, publics })
+        await exportAll(graph, dist)
+    }
 
-    if (global.args.serve) {
+    if (global.args.serveOnly || global.args.serve) {
         await serve(dist)
     }
 }
@@ -58,6 +61,8 @@ interface IArgs {
     dryRun: boolean
     serve: boolean
     watch: boolean
+    serveOnly: boolean
+    skipLint: boolean
 }
 
 declare global {

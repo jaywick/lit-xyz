@@ -49,7 +49,7 @@ export async function generateGraph({ docs, tags, about, publics }: Args) {
     }
 
     for await (const article of graph.articles) {
-        article.related = graph.articles.filter(bySameTagFilter)
+        article.related = graph.articles.filter(bySameTagFilter(article))
     }
 
     for await (const file of publics.files()) {
@@ -69,10 +69,11 @@ function report(path: string, message: string) {
     )
 }
 
-const bySameTagFilter =
-    (a: IArticle) =>
-    (b: IArticle): boolean =>
-        a.tag === b.tag && a.id !== b.id
+const bySameTagFilter = (a: IArticle) => (b: IArticle) =>
+    a.resolvedTag != null &&
+    b.resolvedTag != null &&
+    a.resolvedTag === b.resolvedTag &&
+    a.id !== b.id
 
 const tagMatcher =
     (tags: ITag[]) =>

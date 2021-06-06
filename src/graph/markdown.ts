@@ -25,7 +25,9 @@ export async function resolveArticle(file: File): Promise<IArticle | null> {
     const markdown = parsed.content
     const excerptInMarkdown = parsed.excerpt!
 
-    await lint(file.path, markdownWithFrontmatter)
+    if (!global.args.skipLint) {
+        await lint(file.path, markdownWithFrontmatter)
+    }
 
     const htmlContent = await transformMarkdown(markdown).catch((x) => {
         console.error(x)

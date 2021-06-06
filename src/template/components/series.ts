@@ -13,7 +13,7 @@ export const Series = ({ tag, related }: SeriesArgs) => {
 
     return html`
         <section class="series">
-            <h3>${tag.name}</h3>
+            <h2>${tag.name}</h2>
             <div>${tag.story}</div>
             <h4>More in this series</h4>
             <ul>
