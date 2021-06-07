@@ -274,3 +274,38 @@ header {
 svg.main-logo {
     stroke: var(--theme-primary);
 }
+
+.banner {
+    padding: 20px;
+    border-radius: 6px;
+    margin: 30px 0;
+}
+
+.banner.banner-error {
+    background: #e91e63;
+}
+
+.banner.banner-tip {
+    background: #8bc34a;
+}
+
+.banner.banner-warn {
+    background: #ff9800;
+}
+
+.banner.banner-info {
+    background: #2196f3;
+}
+
+.banner-header {
+    display: inline-flex;
+    align-items: center;
+}
+
+.banner-title {
+    margin: 0 0 0 15px;
+}
+
+.banner-content {
+    margin: 10px 0 0 0;
+}

@@ -15,6 +15,14 @@
             "problemMatcher": ["$tsc"],
             "label": "npm: start",
             "detail": "Export mock data, skipping images and start a watch server"
+        },
+        {
+            "type": "npm",
+            "script": "lint",
+            "problemMatcher": ["$tsc-watch"],
+            "label": "npm: lint",
+            "detail": "Lint markdown from actual docs",
+            "isBackground": true
         }
     ]
 }
