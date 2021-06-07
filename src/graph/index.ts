@@ -36,7 +36,7 @@ export async function generateGraph(context: IContext) {
 async function processArticleFolders(context: IContext) {
     const {
         filesystem: { docs },
-        args: { skipImages },
+        args: { skipLint },
         graph,
     } = context
 
@@ -45,7 +45,7 @@ async function processArticleFolders(context: IContext) {
 
         for await (const file of subdirectory.files()) {
             if (file.isExtensionOneOf('.md', '.mdx')) {
-                const article = await resolveArticle(file, skipImages)
+                const article = await resolveArticle(file, skipLint)
 
                 if (article) {
                     graph.articles.push(article)

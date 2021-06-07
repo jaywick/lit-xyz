@@ -4,8 +4,9 @@
     "main": "src/index.ts",
     "license": "MIT",
     "scripts": {
-        "start": "nodemon --watch src --watch public --watch  doc -e ts,css --loader ts-node/esm . --resolveJsonModule --mock-data --skip-images --serve",
+        "start": "nodemon --watch src --watch public --watch doc -e ts,css --loader ts-node/esm . --resolveJsonModule --mock-data --skip-images --serve",
         "export": "node --loader ts-node/esm . --resolveJsonModule",
+        "lint": "nodemon --watch doc -e mdx,md --loader ts-node/esm . --resolveJsonModule --skip-images --skip-export",
         "typecheck": "tsc -p . --noEmit"
     },
     "dependencies": {

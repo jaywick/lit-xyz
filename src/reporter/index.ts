@@ -25,11 +25,11 @@ export async function log(
         args.vfile.messages
             .map((entry) =>
                 [
+                    color(`${errorLevel.toLowerCase()} `),
                     chalk.cyan(args.filepath),
                     entry.line && chalk.yellowBright(`:${entry.line}`),
-                    '\t',
-                    color(`${errorLevel.toLowerCase()} `),
-                    chalk.gray(entry.ruleId + '\t'),
+                    ' ',
+                    chalk.gray(entry.ruleId + ' '),
                     entry.message,
                 ]
                     .filter(Boolean)
