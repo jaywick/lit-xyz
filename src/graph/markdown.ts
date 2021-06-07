@@ -8,6 +8,8 @@ import remarkSlug from 'remark-slug'
 import rehypeRaw from 'rehype-raw'
 import unified from 'unified'
 import parseMarkdown from 'gray-matter'
+// @ts-ignore
+import remarkFootnodes from 'remark-footnotes'
 import { rehypeLazyImages } from './plugins/rehype-lazy-images'
 import { IArticle, IFrontmatter } from '../types'
 import { File, requirer } from './util'
@@ -15,6 +17,8 @@ import { remarkVideo } from './plugins/remark-videos'
 import { lint } from './plugins/remark-lint-preset-xyz'
 import remarkStripMarkdown from 'strip-markdown'
 import { log } from '../reporter'
+import remarkBanner from './plugins/remark-banner'
+import remarkAnnotate from './plugins/remark-annotate-plugin'
 
 export async function resolveArticle(
     file: File,
@@ -75,9 +79,12 @@ export async function resolveArticle(
 async function transformMarkdown(text: string): Promise<string> {
     const processor = unified()
         .use(remarkParse)
+        .use(remarkAnnotate)
+        .use(remarkBanner)
         .use(remarkVideo)
         .use(remarkSlug)
         .use(remarkPrism)
+        .use(remarkFootnodes, { inlineNotes: true })
         .use(remarkRehype, { allowDangerousHtml: true })
         .use(rehypeRaw)
         .use(rehypeStringify, { allowDangerousHtml: true })

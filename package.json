@@ -4,7 +4,7 @@
     "main": "src/index.ts",
     "license": "MIT",
     "scripts": {
-        "start": "nodemon --watch src --watch public --watch doc -e ts,css --loader ts-node/esm . --resolveJsonModule --mock-data --skip-images --serve",
+        "start": "nodemon --watch src --watch public --watch doc -e ts,md,mdx,css --loader ts-node/esm . --resolveJsonModule --mock-data --skip-images --serve",
         "export": "node --loader ts-node/esm . --resolveJsonModule",
         "lint": "nodemon --watch doc -e mdx,md --loader ts-node/esm . --resolveJsonModule --skip-images --skip-export",
         "typecheck": "tsc -p . --noEmit"
@@ -17,10 +17,15 @@
         "gray-matter": "4.0.3",
         "jimp": "0.16.1",
         "listr": "^0.14.3",
+        "mdast-util-to-markdown": "^0.6.5",
+        "micromark": "^2.11.4",
         "nodemon": "2.0.7",
         "rehype-raw": "5.1.0",
         "rehype-stringify": "8.0.0",
         "remark": "13.0.0",
+        "remark-abbr": "^1.4.1",
+        "remark-admonitions": "^1.2.1",
+        "remark-footnotes": "^3.0.0",
         "remark-lint-blockquote-indentation": "2.0.1",
         "remark-lint-checkbox-character-style": "3.0.0",
         "remark-lint-checkbox-content-indent": "3.0.0",
@@ -84,7 +89,12 @@
         "typescript": "4.3.2",
         "unified": "9.2.1",
         "unified-lint-rule": "1.0.6",
+        "unist-builder": "^3.0.0",
         "unist-util-visit": "2.0.3",
         "yaml": "1.10.2"
+    },
+    "devDependencies": {
+        "@types/nodemon": "1.19.0",
+        "@types/yaml": "1.9.7"
     }
 }
