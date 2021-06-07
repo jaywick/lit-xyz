@@ -131,17 +131,13 @@ cite::before {
 }
 
 kbd {
-    background-color: var(--theme-secondary);
-    border-radius: 3px;
-    border: 1px solid var(--theme-grey);
-    box-shadow: 0 1px 1px var(--theme-hover), 0 2px 0 0 var(--theme-gray) inset;
-    color: var(--theme-background);
-    display: inline-block;
-    font-size: 0.85em;
-    font-weight: 700;
-    line-height: 1;
-    padding: 2px 4px;
-    white-space: nowrap;
+    white-space: pre;
+    background: #455a64;
+    color: #ffffff;
+    padding: 3px 6px 1px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    border-bottom: #607d8b 2px solid;
 }
 
 kbd:not(:last-of-type) {
@@ -282,19 +278,19 @@ svg.main-logo {
 }
 
 .banner.banner-error {
-    background: #e91e63;
+    background: #880e4f;
 }
 
 .banner.banner-tip {
-    background: #8bc34a;
+    background: #558b2f;
 }
 
 .banner.banner-warn {
-    background: #ff9800;
+    background: #f57f17;
 }
 
 .banner.banner-info {
-    background: #2196f3;
+    background: #0d47a1;
 }
 
 .banner-header {
@@ -308,4 +304,9 @@ svg.main-logo {
 
 .banner-content {
     margin: 10px 0 0 0;
+}
+
+abbr {
+    text-decoration: none;
+    border-bottom: #009688 dotted 2px;
 }

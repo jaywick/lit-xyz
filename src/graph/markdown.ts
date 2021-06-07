@@ -19,6 +19,7 @@ import remarkStripMarkdown from 'strip-markdown'
 import { log } from '../reporter'
 import remarkBanner from './plugins/remark-banner'
 import remarkAnnotate from './plugins/remark-annotate-plugin'
+import { remarkAbbr } from './plugins/remark-abbr'
 
 export async function resolveArticle(
     file: File,
@@ -81,6 +82,7 @@ async function transformMarkdown(text: string): Promise<string> {
         .use(remarkParse)
         .use(remarkAnnotate)
         .use(remarkBanner)
+        .use(remarkAbbr)
         .use(remarkVideo)
         .use(remarkSlug)
         .use(remarkPrism)

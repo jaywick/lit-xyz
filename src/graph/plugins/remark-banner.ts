@@ -1,7 +1,7 @@
 import { Node } from 'unist-builder'
 import visit from 'unist-util-visit'
+import { log } from '../../reporter'
 import { Banner } from '../../template/components/banner'
-import { html } from '../../template/utils'
 
 interface CodeNode extends Node {
     lang: string
@@ -17,6 +17,14 @@ export default function remarkBanner() {
                 !['info', 'error', 'warn', 'tip'].includes(lang)
             ) {
                 return
+            }
+
+            if (meta == null) {
+                log('ERROR', {
+                    message:
+                        'Missing banner meta, expected syntax is "```kind meta"',
+                    data: node,
+                })
             }
 
             node.type = `html`
