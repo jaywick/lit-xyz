@@ -13,7 +13,7 @@
             "type": "npm",
             "script": "start",
             "problemMatcher": ["$tsc"],
-            "label": "npm: start",
+            "label": "Start",
             "detail": "Export mock data, skipping images and start a watch server"
         },
         {

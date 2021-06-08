@@ -9,21 +9,24 @@ import rehypeRaw from 'rehype-raw'
 import unified from 'unified'
 import parseMarkdown from 'gray-matter'
 // @ts-ignore
-import remarkFootnodes from 'remark-footnotes'
+import remarkFootnotes from 'remark-footnotes'
 import { rehypeLazyImages } from './plugins/rehype-lazy-images'
-import { IArticle, IFrontmatter } from '../types'
+import { IArticle, IFrontmatter, IImage } from '../types'
 import { File, requirer } from './util'
 import { remarkVideo } from './plugins/remark-videos'
 import { lint } from './plugins/remark-lint-preset-xyz'
 import remarkStripMarkdown from 'strip-markdown'
 import { log } from '../reporter'
-import remarkBanner from './plugins/remark-banner'
+import { remarkBanner } from './plugins/remark-banner'
 import remarkAnnotate from './plugins/remark-annotate-plugin'
 import { remarkAbbr } from './plugins/remark-abbr'
+import { remarkImageCaption } from './plugins/remark-img-captions'
+import remarkGfm from 'remark-gfm'
 
 export async function resolveArticle(
     file: File,
-    skipLint: boolean
+    skipLint: boolean,
+    images: IImage[]
 ): Promise<IArticle | null> {
     const id = file.parent.name
     const markdownWithFrontmatter = await file.readContent()
@@ -38,7 +41,11 @@ export async function resolveArticle(
         await lint(file.path, markdownWithFrontmatter)
     }
 
-    const htmlContent = await transformMarkdown(markdown).catch((err) => {
+    const htmlContent = await transformMarkdown(
+        markdown,
+        file.path,
+        images
+    ).catch((err) => {
         log('ERROR', { message: err.message, data: err })
         return null
     })
@@ -77,20 +84,26 @@ export async function resolveArticle(
     }
 }
 
-async function transformMarkdown(text: string): Promise<string> {
+async function transformMarkdown(
+    text: string,
+    sourceFile: string,
+    images: IImage[]
+): Promise<string> {
     const processor = unified()
         .use(remarkParse)
         .use(remarkAnnotate)
-        .use(remarkBanner)
-        .use(remarkAbbr)
+        .use(remarkBanner, { sourceFile })
+        .use(remarkAbbr, { sourceFile })
         .use(remarkVideo)
+        .use(remarkImageCaption, { sourceFile })
+        .use(remarkGfm)
         .use(remarkSlug)
         .use(remarkPrism)
-        .use(remarkFootnodes, { inlineNotes: true })
+        .use(remarkFootnotes, { inlineNotes: true })
         .use(remarkRehype, { allowDangerousHtml: true })
         .use(rehypeRaw)
         .use(rehypeStringify, { allowDangerousHtml: true })
-        .use(rehypeLazyImages)
+        .use(rehypeLazyImages, { images })
 
     const result = await processor.process(text)
     return String(result)

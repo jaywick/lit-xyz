@@ -44,15 +44,25 @@ async function processArticleFolders(context: IContext) {
         if (subdirectory.path.startsWith('.')) continue
 
         for await (const file of subdirectory.files()) {
+            if (file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')) {
+                const image = await resolveImage(file)
+                graph.images.push(image)
+            }
+        }
+
+        for await (const file of subdirectory.files()) {
             if (file.isExtensionOneOf('.md', '.mdx')) {
-                const article = await resolveArticle(file, skipLint)
+                const article = await resolveArticle(
+                    file,
+                    skipLint,
+                    graph.images
+                )
 
                 if (article) {
                     graph.articles.push(article)
                 }
             } else if (file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')) {
-                const image = await resolveImage(file)
-                graph.images.push(image)
+                // already processed
             } else {
                 log('WARN', {
                     message: 'Ignoring unknown file extension',

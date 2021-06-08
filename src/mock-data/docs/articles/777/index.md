@@ -69,6 +69,8 @@ And a table later on
 
 Here's that table I promised
 
-| Key | Value |     |
-| --- | ----- | --- |
-| foo | bar   | 🌏  |
+| Key  | Value |       |
+| ---- | ----- | ----- |
+| foo  | bar   | a     |
+| fizz | bizz  | b     |
+| baz  | fuzz  | _bar_ |

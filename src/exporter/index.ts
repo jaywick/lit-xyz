@@ -58,7 +58,9 @@ export async function exportAll(context: IContext) {
                 for (const tag of graph.tags) {
                     await dist.file('tag', `${tag.key}.html`).writeContent(
                         List({
-                            articles: graph.articles,
+                            articles: graph.articles.filter(
+                                (x) => x.tag === tag.key
+                            ),
                             about: graph.about,
                             tag,
                         })
@@ -76,7 +78,13 @@ export async function exportAll(context: IContext) {
 
                     await articleFolder
                         .file(`${article.slug}.html`)
-                        .writeContent(Article({ article, about: graph.about }))
+                        .writeContent(
+                            Article({
+                                article,
+                                about: graph.about,
+                                images: graph.images,
+                            })
+                        )
                 }
             },
         },

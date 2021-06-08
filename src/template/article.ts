@@ -1,4 +1,4 @@
-import { IAbout, IArticle, ITag } from '../types'
+import { IAbout, IArticle, IImage, ITag } from '../types'
 import { Footer } from './components/footer'
 import { Head } from './components/head'
 import { Header } from './components/header'
@@ -9,9 +9,14 @@ import { html } from './utils'
 interface ArticleArgs {
     article: IArticle
     about: IAbout
+    images: IImage[]
 }
 
-export const Article = ({ article, about }: ArticleArgs) => html`<!DOCTYPE html>
+export const Article = ({
+    article,
+    about,
+    images,
+}: ArticleArgs) => html`<!DOCTYPE html>
     <html lang="en">
         ${Head({
             title: article.title,
@@ -30,7 +35,11 @@ export const Article = ({ article, about }: ArticleArgs) => html`<!DOCTYPE html>
                     &bull;
                     <span>${article.readTime} min read</span>
                 </div>
-                ${Hero({ url: article.heroStaticPath, alt: article.heroAlt })}
+                ${Hero({
+                    url: article.heroStaticPath,
+                    alt: article.heroAlt,
+                    images,
+                })}
                 <div aria-roledescription="article content">
                     ${article.htmlContent}
                 </div>

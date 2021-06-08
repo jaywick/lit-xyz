@@ -12,7 +12,6 @@ html {
 
 body {
     color: var(--theme-primary);
-    font-size: 18px;
     line-height: 1.756;
     font-family: var(--typography-content);
     -webkit-font-smoothing: antialiased;
@@ -26,11 +25,6 @@ body {
         margin: unset;
         max-width: unset;
     }
-}
-
-h2 {
-    margin: 3rem 0 0;
-    font-size: 2rem;
 }
 
 h1,
@@ -51,8 +45,9 @@ main {
     padding: 1rem;
 }
 
-article > p {
-    font-size: 18px;
+article p {
+    margin: 0 auto 33px;
+    text-align: justify;
 }
 
 a {
@@ -107,20 +102,21 @@ h1 {
 blockquote {
     color: var(--theme-primary);
     font-family: var(--typography-headings);
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-style: italic;
-    font-weight: bold;
-    line-height: 1.32;
+    line-height: 1.42;
     margin: 0 auto;
     max-width: 880px !important;
     padding-bottom: 0;
-    width: 100%;
+    margin: 5rem 2rem;
+    border-left: 6px solid #3f51b5;
+    padding: 0 2rem;
 }
 
 cite {
     display: block;
     text-align: right;
-    font-size: 1rem;
+    font-size: 1.3rem;
     color: var(--theme-grey);
     font-style: italic;
     font-family: var(--typography-headings);
@@ -144,14 +140,10 @@ kbd:not(:last-of-type) {
     margin-right: 5px;
 }
 
-img {
-    max-width: min(680px, 100%);
-}
-
 hr {
     position: relative;
     width: 100%;
-    max-width: min(680px, 100%);
+    width: min(680px, 100%);
     height: 14.36px;
     background-image: url("data:image/svg+xml,%3Csvg width='10' height='15' viewBox='0 0 10 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.567383' y='14.1777' width='16' height='1' transform='rotate(-60 0.567383 14.1777)' fill='%232D2E33'/%3E%3C/svg%3E");
     box-sizing: border-box;
@@ -198,6 +190,7 @@ p > code {
     padding: 1px 4px;
     margin: 0 2px;
     border-radius: 5px;
+    font-size: 18px;
 }
 
 mark {
@@ -219,14 +212,8 @@ mark {
 
 img.hero {
     margin: 2rem 0 2rem;
-
-    /* margin: 2rem calc(((100% + 100px) - 100%) / -2) 2rem;
-    width: calc(100% + 100px);
-    max-width: calc(100% + 100px); */
-}
-
-article > img {
-    border-radius: 3px;
+    width: 100%;
+    height: auto;
 }
 
 footer {
@@ -309,4 +296,65 @@ svg.main-logo {
 abbr {
     text-decoration: none;
     border-bottom: #009688 dotted 2px;
+}
+
+figcaption {
+    opacity: 0.5;
+    font-style: italic;
+    text-align: center;
+}
+
+figure {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+thead {
+    background: #263238;
+}
+
+table,
+th,
+tr,
+td,
+thead {
+    border: 1px solid #607d8b;
+    padding: 5px 20px;
+}
+
+table {
+    margin: 40px 0;
+}
+
+@keyframes shimmer {
+    from {
+        background-position: -1000px;
+    }
+    to {
+        background-position: 1000px;
+    }
+}
+
+article img {
+    border-radius: 3px;
+    background: linear-gradient(
+        to left,
+        rgba(228, 228, 228, 0.1),
+        rgba(218, 218, 218, 0.1) 33%,
+        rgba(218, 218, 218, 0.1) 50%,
+        rgba(228, 228, 228, 0.1)
+    );
+    animation-name: shimmer;
+    animation-duration: 4s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    max-width: 100%;
+    height: auto;
 }

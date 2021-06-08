@@ -4,7 +4,7 @@
     "main": "src/index.ts",
     "license": "MIT",
     "scripts": {
-        "start": "nodemon --watch src --watch public --watch doc -e ts,md,mdx,css --loader ts-node/esm . --resolveJsonModule --mock-data --skip-images --serve",
+        "start": "nodemon --watch src --watch public --watch doc -e ts,md,mdx,css,yml --loader ts-node/esm . --resolveJsonModule --mock-data --skip-images --serve",
         "export": "node --loader ts-node/esm . --resolveJsonModule",
         "lint": "nodemon --watch doc -e mdx,md --loader ts-node/esm . --resolveJsonModule --skip-images --skip-export",
         "typecheck": "tsc -p . --noEmit"
@@ -26,6 +26,7 @@
         "remark-abbr": "^1.4.1",
         "remark-admonitions": "^1.2.1",
         "remark-footnotes": "^3.0.0",
+        "remark-gfm": "^1.0.0",
         "remark-lint-blockquote-indentation": "2.0.1",
         "remark-lint-checkbox-character-style": "3.0.0",
         "remark-lint-checkbox-content-indent": "3.0.0",

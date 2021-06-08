@@ -9,29 +9,38 @@ interface LinkNode extends Node {
     children: (Node & { value: string })[]
 }
 
-export const remarkAbbr: Plugin<[]> = () => (tree: Node) =>
-    visit(tree, 'link', (node: LinkNode) => {
-        const url = node.url
+interface RemarkAbbrOptions {
+    sourceFile: string
+}
 
-        if (
-            !url &&
-            node.children.length === 0 &&
-            node.children[0].type !== 'text' &&
-            !node.children[0].value.startsWith(':')
-        ) {
-            return
-        }
+export const remarkAbbr: Plugin<[RemarkAbbrOptions]> =
+    ({ sourceFile }) =>
+    (tree: Node) =>
+        visit(tree, 'link', (node: LinkNode) => {
+            const url = node.url
 
-        if (node.children.length > 1) {
-            log('WARN', {
-                message:
-                    'Unexpected ABBR syntax. Expected 1 child of type text.',
-                data: node,
-            })
-        }
+            if (
+                !url ||
+                node.children.length === 0 ||
+                node.children[0].type !== 'text' ||
+                !node.children[0].value.startsWith(':')
+            ) {
+                return
+            }
 
-        const content = node.children[0].value.slice(1) // ignore leading `:`
+            if (node.children.length > 1) {
+                log('WARN', {
+                    message:
+                        'Unexpected ABBR syntax. Expected 1 child of type text.',
+                    data: node,
+                    filepath: sourceFile,
+                })
+            }
 
-        node.type = 'html'
-        node.value = html`<abbr title="${String(node.url)}">${content}</abbr>`
-    })
+            const content = node.children[0].value.slice(1) // ignore leading `:`
+
+            node.type = 'html'
+            node.value = html`<abbr title="${String(node.url)}"
+                >${content}</abbr
+            >`
+        })
