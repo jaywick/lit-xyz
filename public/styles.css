@@ -1,7 +1,7 @@
 :root {
-    --typography-headings: 'IBM Plex Mono Light';
-    --typography-content: 'IBM Plex Mono Light';
-    --typography-code: 'IBM Plex Mono Light';
+    --typography-headings: 'IBM Plex Mono', monospace;
+    --typography-content: 'IBM Plex Mono', monospace;
+    --typography-code: 'IBM Plex Mono', monospace;
 }
 
 html {
