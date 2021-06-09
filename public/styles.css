@@ -354,7 +354,22 @@ article img {
     animation-name: shimmer;
     animation-duration: 4s;
     animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    animation-iteration-count: 5;
     max-width: 100%;
     height: auto;
+}
+
+main.error {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+main.error h1 {
+    font-weight: 200;
 }

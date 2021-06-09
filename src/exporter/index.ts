@@ -6,6 +6,7 @@ import { Article } from '../template/article'
 import { List } from '../template/list'
 import { IContext } from '..'
 import Listr, { ListrTask } from 'listr'
+import { NotFound } from '../template/404'
 
 export async function exportAll(context: IContext) {
     const {
@@ -66,6 +67,14 @@ export async function exportAll(context: IContext) {
                         })
                     )
                 }
+            },
+        },
+        {
+            title: 'Export error page',
+            task: async () => {
+                await dist
+                    .file('404.html')
+                    .writeContent(NotFound({ about: graph.about }))
             },
         },
         {

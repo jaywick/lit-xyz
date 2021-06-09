@@ -44,6 +44,7 @@ export async function serve(context: IContext) {
         // catch all for not-found
         console.error(`404 Not Found: ${req.url}`)
         res.writeHead(404)
+        res.end(await new File(dist.path, `404.html`).streamContent())
         return res.end()
     })
 

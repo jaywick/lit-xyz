@@ -14,7 +14,7 @@ export const Head = ({
     shouldIncludeCodeCss = false,
 }: HeadArgs) => html` <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="${themeColor}" />
     <meta name="description" content="${description}" />
