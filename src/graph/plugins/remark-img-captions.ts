@@ -25,6 +25,7 @@ export const remarkImageCaption: Plugin<[RemarkImageCaptionOptions]> =
                     message: 'Image with no URL found',
                     data: node,
                     filepath: sourceFile,
+                    group: 'remark-image-caption',
                 })
                 return
             }
@@ -34,6 +35,7 @@ export const remarkImageCaption: Plugin<[RemarkImageCaptionOptions]> =
                     message: 'Alt or titles are required for images',
                     data: node,
                     filepath: sourceFile,
+                    group: 'remark-image-caption',
                 })
             }
 

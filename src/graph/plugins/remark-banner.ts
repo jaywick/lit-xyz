@@ -30,6 +30,7 @@ export const remarkBanner: Plugin<[RemarkBannerOptions]> =
                     message:
                         'Missing banner meta, expected syntax is "```kind meta"',
                     data: node,
+                    group: 'remark-banner',
                     filepath: sourceFile,
                 })
             }

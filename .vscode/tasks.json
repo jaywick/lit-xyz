@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "$(symbol-interface) Typecheck",
+            "label": "$(type-hierarchy) Typecheck",
             "type": "shell",
             "command": "yarn tsc -p . --noEmit --watch --incremental",
             "problemMatcher": "$tsc-watch"
@@ -12,15 +12,35 @@
         {
             "type": "npm",
             "script": "start",
-            "problemMatcher": ["$tsc"],
-            "label": "Start",
+            "problemMatcher": [
+                "$tsc-watch",
+                {
+                    "pattern": [
+                        {
+                            "regexp": "(error|warn)\\s+(.+?):(\\d+|\\d+:\\d+)\\s([a-z0-9-]+)\\s(.+)",
+                            "severity": 1,
+                            "file": 2,
+                            "location": 3,
+                            "code": 4,
+                            "message": 5
+                        }
+                    ],
+                    "fileLocation": "absolute",
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "info Starting up...",
+                        "endsPattern": "info ...and finished"
+                    }
+                }
+            ],
+            "label": "$(debug-start) Start",
             "detail": "Export mock data, skipping images and start a watch server"
         },
         {
             "type": "npm",
             "script": "lint",
-            "problemMatcher": ["$tsc-watch"],
-            "label": "npm: lint",
+            "problemMatcher": "$tsc-watch",
+            "label": "$(check-all) Lint",
             "detail": "Lint markdown from actual docs",
             "isBackground": true
         }

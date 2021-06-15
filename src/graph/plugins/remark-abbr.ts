@@ -34,6 +34,7 @@ export const remarkAbbr: Plugin<[RemarkAbbrOptions]> =
                         'Unexpected ABBR syntax. Expected 1 child of type text.',
                     data: node,
                     filepath: sourceFile,
+                    group: 'remark-abbr',
                 })
             }
 

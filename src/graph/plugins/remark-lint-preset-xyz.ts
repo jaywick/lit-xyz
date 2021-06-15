@@ -1,6 +1,5 @@
 import remark from 'remark'
 
-import chalk from 'chalk'
 // @ts-ignore
 import remarkLintBlockquoteIndentation from 'remark-lint-blockquote-indentation'
 // @ts-ignore

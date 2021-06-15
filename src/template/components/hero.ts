@@ -1,5 +1,5 @@
 import { html } from '../utils'
-import { parse as parsePath } from 'path'
+import { parse as parsePath, resolve as resolvePath } from 'path'
 import { IImage } from '../../types'
 
 interface HeroArgs {
@@ -9,14 +9,16 @@ interface HeroArgs {
 }
 
 export function Hero({ url, alt, images }: HeroArgs) {
-    const { base, name, ext } = parsePath(url)
+    const { base, name, ext, dir } = parsePath(url)
 
     const { width, height } =
         images.find((x) => x.relativePath.endsWith(base)) || {}
 
+    const filePathWithNoExt = resolvePath(dir, name)
+
     const srcSet = ['320w', '480w', '768w', '1024w']
-        .map((size) => `${name}-${size}${ext} ${size}`)
-        .concat(`${name}${ext} 1200w`)
+        .map((size) => `${filePathWithNoExt}-${size}${ext} ${size}`)
+        .concat(`${filePathWithNoExt}${ext} 1200w`)
         .join(', ')
 
     return html`

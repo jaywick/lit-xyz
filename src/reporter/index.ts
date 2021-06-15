@@ -3,15 +3,23 @@ import util from 'util'
 import { performance } from 'perf_hooks'
 import { VFile } from 'vfile'
 
-export async function log(
-    errorLevel: 'WARN' | 'INFO' | 'ERROR',
-    args: {
-        message?: string
-        data?: object
-        vfile?: VFile
-        filepath?: string
-    }
-) {
+type Args =
+    | {
+          filepath: string
+          data?: object
+          vfile: VFile
+      }
+    | {
+          filepath: string
+          data?: object
+          group: string
+          message: string
+      }
+    | {
+          message: string
+      }
+
+export async function log(errorLevel: 'WARN' | 'INFO' | 'ERROR', args: Args) {
     let color: Chalk
     if (errorLevel === 'WARN') {
         color = chalk.yellow
@@ -21,7 +29,7 @@ export async function log(
         color = chalk.gray
     }
 
-    if (args.vfile != null) {
+    if ('vfile' in args) {
         args.vfile.messages
             .map((entry) =>
                 [
@@ -36,18 +44,27 @@ export async function log(
                     .join('')
             )
             .forEach((message) => console.log(message))
+    } else if ('filepath' in args) {
+        console.log(
+            [
+                color(`${errorLevel.toLowerCase()}`),
+                chalk.cyan(args.filepath) + ':1',
+                args.group,
+                args.message,
+                args.data == null
+                    ? ''
+                    : ': ' + chalk.gray(util.inspect(args.data)),
+            ]
+                .filter(Boolean)
+                .join(' ')
+        )
+    } else {
+        console.log(
+            [color(`${errorLevel.toLowerCase()}`), args.message]
+                .filter(Boolean)
+                .join(' ')
+        )
     }
-
-    console.log(
-        [
-            color(`${errorLevel.toLowerCase()}`),
-            args.filepath && chalk.cyan(args.filepath),
-            args.message,
-            args.data == null ? '' : ': ' + chalk.gray(util.inspect(args.data)),
-        ]
-            .filter(Boolean)
-            .join(' ')
-    )
 }
 
 export function elapsed(startTime: number, subtaskCount: number = 0) {

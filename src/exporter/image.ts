@@ -53,7 +53,11 @@ async function resize(
         const image = await Jimp.read(filepath)
         await image.scaleToFit(width, height).quality(100).writeAsync(newPath)
     } catch (err) {
-        log('ERROR', { message: `Failed to resize`, filepath })
+        log('ERROR', {
+            message: `Failed to resize`,
+            group: 'image-resize',
+            filepath,
+        })
         throw err
     }
 }

@@ -12,6 +12,7 @@ export interface IArticle extends IFrontmatter {
     readTime: number
     readableDate: string
     htmlContent: string
+    htmlSnippet: string
     heroStaticPath: string
     originalMarkdown: string
     originalPath: string

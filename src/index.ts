@@ -16,6 +16,9 @@ export interface IContext {
 }
 
 async function main() {
+    log('INFO', {
+        message: 'Starting up...',
+    })
     new Listr<IContext>(
         [
             {
@@ -41,11 +44,25 @@ async function main() {
                 enabled: (context) => context.args?.serve || false,
             },
         ],
-        { concurrent: false }
+        {
+            concurrent: false,
+            // @ts-ignore
+            collapse: false,
+        }
     )
         .run()
+        .then(() =>
+            log('INFO', {
+                message: '...and finished',
+            })
+        )
         .catch((err) => {
-            log('ERROR', { message: err.message, data: err })
+            log('ERROR', {
+                message: err.message,
+                data: err,
+                group: 'main',
+                filepath: __filename,
+            })
         })
 }
 
@@ -67,6 +84,8 @@ function resolveCommandLineArgs(context: IContext) {
     log('INFO', {
         message: 'Running with options',
         data: context.args,
+        group: 'resolve-commandline-args',
+        filepath: __filename,
     })
 }
 
@@ -78,6 +97,7 @@ function resolveFilesystemPaths(context: IContext) {
     context.filesystem = {
         publics: new Directory(__dirname, '../public').ensureExists(),
         dist: new Directory(__dirname, '../dist'),
+        templates: new Directory(__dirname, '../src'),
         docs: docRoot.subdirectory('articles').ensureExists(),
         tags: docRoot.subdirectory('tags').ensureExists(),
         about: docRoot.file('about.yml').ensureExists(),
@@ -98,4 +118,5 @@ interface IFilesystem {
     docs: Directory
     tags: Directory
     about: File
+    templates: Directory
 }

@@ -30,29 +30,48 @@ export async function resolveArticle(
 ): Promise<IArticle | null> {
     const id = file.parent.name
     const markdownWithFrontmatter = await file.readContent()
-    const parsed = parseMarkdown(markdownWithFrontmatter)
-
-    const frontmatter = parsed.data as IFrontmatter
-
-    const markdown = parsed.content
-    const excerptInMarkdown = parsed.excerpt!
+    const {
+        data: frontmatter,
+        content: markdownContent,
+        excerpt: markdownExcerpt,
+    } = parseMarkdown(markdownWithFrontmatter, { excerpt: true })
 
     if (!skipLint) {
         await lint(file.path, markdownWithFrontmatter)
     }
 
     const htmlContent = await transformMarkdown(
-        markdown,
+        markdownContent,
         file.path,
         images
     ).catch((err) => {
-        log('ERROR', { message: err.message, data: err })
+        log('ERROR', {
+            message: err.message,
+            filepath: file.path,
+            data: err,
+            group: 'transform-markdown-content',
+        })
         return null
     })
 
     if (htmlContent === null) {
         return null
     }
+
+    const htmlSnippet =
+        (await transformMarkdown(
+            markdownExcerpt || '',
+            file.path,
+            images
+        ).catch((err) => {
+            log('ERROR', {
+                message: err.message,
+                filepath: file.path,
+                data: err,
+                group: 'transform-markdown-excerpt',
+            })
+            return null
+        })) || ''
 
     const slug = frontmatter.slug || slugify(frontmatter.title)
 
@@ -70,14 +89,15 @@ export async function resolveArticle(
         slug,
         heroAlt: frontmatter.heroAlt || '',
 
-        originalMarkdown: markdown,
+        originalMarkdown: markdownContent,
         originalPath: file.path,
         readableDate: readableDate(required(frontmatter.date, `date`)),
-        readTime: readTime(markdown),
+        readTime: readTime(markdownContent),
         htmlContent,
+        htmlSnippet,
         heroStaticPath: `/blog/${id}/${frontmatter.hero}`,
         url: `/blog/${id}/${frontmatter.slug}`,
-        excerpt: await plainText(excerptInMarkdown),
+        excerpt: await plainText(markdownExcerpt || ''),
 
         related: [],
         resolvedTag: null,

@@ -23,7 +23,11 @@ export async function resolveTags(file: File): Promise<ITag[]> {
     const parsed = parseYaml(content) as ITag[]
 
     if (!Array.isArray(parsed)) {
-        log('ERROR', { message: 'Invalid tags', filepath: file.path })
+        log('ERROR', {
+            message: 'Invalid tags',
+            filepath: file.path,
+            group: 'resolve-tags',
+        })
     }
 
     const required = requirer(file.path)

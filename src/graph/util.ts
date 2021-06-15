@@ -1,7 +1,7 @@
 import paths from 'path'
 import { existsSync, lstatSync, promises as fs } from 'fs'
 import { log } from '../reporter'
-
+import md5file from 'md5-file'
 abstract class FileSystemObject {
     path: string
 
@@ -46,6 +46,10 @@ export class File extends FileSystemObject {
 
     async streamContent(): Promise<Buffer> {
         return fs.readFile(this.path)
+    }
+
+    async md5() {
+        return await md5file(this.path)
     }
 
     isExtensionOneOf(...extensionsIncludingDot: string[]): boolean {
@@ -127,6 +131,7 @@ export const requirer = (path: string) => (value: any, key: string) => {
             message: `Missing value for required key`,
             filepath: path,
             data: { key },
+            group: 'requirer',
         })
         return ''
     }

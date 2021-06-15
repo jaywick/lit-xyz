@@ -20,17 +20,23 @@ export async function generateGraph(context: IContext) {
         public: [],
     }
 
-    return new Listr([
-        { title: 'Process article folders', task: processArticleFolders },
+    return new Listr(
+        [
+            { title: 'Process article folders', task: processArticleFolders },
+            {
+                title: 'Populate cross referenced data',
+                task: crossReferenceArticles,
+            },
+            {
+                title: 'Collect public files',
+                task: collectPublicFiles,
+            },
+        ],
         {
-            title: 'Populate cross referenced data',
-            task: crossReferenceArticles,
-        },
-        {
-            title: 'Collect public files',
-            task: collectPublicFiles,
-        },
-    ])
+            concurrent: false, // @ts-ignore
+            collapse: false,
+        }
+    )
 }
 
 async function processArticleFolders(context: IContext) {
@@ -67,6 +73,7 @@ async function processArticleFolders(context: IContext) {
                 log('WARN', {
                     message: 'Ignoring unknown file extension',
                     data: { extension: file.extension },
+                    group: 'process-article-folders',
                     filepath: file.path,
                 })
             }
@@ -120,6 +127,7 @@ const tagMatcher =
         log('WARN', {
             message: 'Unknown tag could not be matched from tags list',
             data: { tag },
+            group: 'cross-reference-articles',
             filepath: originalPath,
         })
         return null
