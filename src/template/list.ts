@@ -13,33 +13,19 @@ interface ListArgs {
     images: IImage[]
 }
 
-const AllArticles: ITag = {
-    aliases: [],
-    hero: '',
-    key: '',
-    name: 'All Articles',
-    story: 'All blog posts',
-    urls: [],
-}
-
-export const List = ({
-    articles,
-    about,
-    images,
-    tag = AllArticles,
-}: ListArgs) => {
+export const List = ({ articles, about, images, tag }: ListArgs) => {
     return html`<!DOCTYPE html>
         <html lang="en">
             ${Head({
-                title: `Jay Wick | ${tag.name}`,
-                description: tag.story,
+                title: `Jay Wick | ${tag?.name || 'Blog Posts'}`,
+                description: tag?.story ?? 'Blog Posts',
                 themeColor: about.themeColor,
             })}
             <body>
-                ${Header()} ${Series({ tag, related: [] })}
-                <article>
-                    ${articles.map(
-                        (article) => html`
+                ${Header()} ${tag && Series({ tag, related: [] })}
+                ${articles.map(
+                    (article) => html`
+                        <article class="list-article">
                             <h1>
                                 <a href="${article.url}">${article.title}</a>
                             </h1>
@@ -55,17 +41,16 @@ export const List = ({
                                 <span>${article.readTime} min read</span>
                             </div>
                             ${Hero({
-                                url: article.heroStaticPath,
+                                url: article.heroUrl,
                                 alt: article.heroAlt,
                                 images,
                             })}
                             <div aria-roledescription="article content">
                                 ${article.htmlSnippet}
                             </div>
-                        `
-                    )}
-                </article>
-
+                        </article>
+                    `
+                )}
                 ${Footer({ author: about.author })}
             </body>
         </html>`

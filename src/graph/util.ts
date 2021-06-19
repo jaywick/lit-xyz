@@ -2,6 +2,7 @@ import paths from 'path'
 import { existsSync, lstatSync, promises as fs } from 'fs'
 import { log } from '../reporter'
 import md5file from 'md5-file'
+
 abstract class FileSystemObject {
     path: string
 
@@ -71,6 +72,14 @@ export class File extends FileSystemObject {
         } catch {
             return false
         }
+    }
+
+    async copyTo(directory: Directory) {
+        await fs.copyFile(this.path, directory.file(this.name).path)
+    }
+
+    get extensionlessFilename(): string {
+        return paths.parse(this.path).name
     }
 }
 

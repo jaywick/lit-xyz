@@ -2,6 +2,7 @@ import { parse as parseYaml } from 'yaml'
 import { log } from '../reporter'
 import { IAbout, ITag } from '../types'
 import { File, requirer } from './util'
+import paths from 'path'
 
 export async function resolveAbout(file: File): Promise<IAbout> {
     const content = await file.readContent()
@@ -32,12 +33,15 @@ export async function resolveTags(file: File): Promise<ITag[]> {
 
     const required = requirer(file.path)
 
-    return parsed.map((t, i) => ({
+    return parsed.map((t) => ({
         hero: required(t.hero, 'hero'),
+        heroUrl: '',
+
         key: required(t.key, 'key'),
         name: required(t.name, 'name'),
         story: required(t.story, 'story'),
         aliases: t.aliases || [],
         urls: t.urls || [],
+        url: `/tag/${t.key}`,
     }))
 }

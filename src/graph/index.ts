@@ -8,13 +8,11 @@ import { File, nil } from './util'
 import { resolveAbout, resolveTags } from './yaml'
 
 export async function generateGraph(context: IContext) {
-    const { tags, about } = context.filesystem
-
-    const tagFile = new File(tags.path, 'tags.yml').ensureExists()
+    const { about } = context.filesystem
 
     context.graph = {
         about: await resolveAbout(about),
-        tags: await resolveTags(tagFile),
+        tags: [],
         articles: [],
         images: [],
         public: [],
@@ -22,7 +20,14 @@ export async function generateGraph(context: IContext) {
 
     return new Listr(
         [
-            { title: 'Process article folders', task: processArticleFolders },
+            {
+                title: 'Process tags',
+                task: processTags,
+            },
+            {
+                title: 'Process article folders',
+                task: processArticleFolders,
+            },
             {
                 title: 'Populate cross referenced data',
                 task: crossReferenceArticles,
@@ -39,6 +44,45 @@ export async function generateGraph(context: IContext) {
     )
 }
 
+async function processTags(context: IContext) {
+    const { docs, tags } = context.filesystem
+
+    const tagFile = new File(tags.path, 'tags.yml').ensureExists()
+    context.graph.tags = await resolveTags(tagFile)
+
+    const heroImages = tagFile.parent.subdirectory('heroes').files()
+
+    for await (const file of heroImages) {
+        if (file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')) {
+            const tag = context.graph.tags.find(
+                (x) => x.hero === `./heroes/${file.name}`
+            )
+
+            if (tag) {
+                const image = await resolveImage(file)
+                context.graph.images.push({
+                    ...image,
+                    imageUrl: `/tag/${tag.key}/${file.name}`,
+                })
+            } else {
+                log('WARN', {
+                    message: 'Hero file exists but no tag uses it',
+                    data: { extension: file.name },
+                    group: 'process-tags',
+                    filepath: file.path,
+                })
+            }
+        } else {
+            log('WARN', {
+                message: 'Ignoring unknown file extension',
+                data: { extension: file.extension },
+                group: 'process-tags',
+                filepath: file.path,
+            })
+        }
+    }
+}
+
 async function processArticleFolders(context: IContext) {
     const {
         filesystem: { docs },
@@ -52,7 +96,10 @@ async function processArticleFolders(context: IContext) {
         for await (const file of subdirectory.files()) {
             if (file.isExtensionOneOf('.jpg', '.jpeg', '.png', '.gif')) {
                 const image = await resolveImage(file)
-                graph.images.push(image)
+                graph.images.push({
+                    ...image,
+                    imageUrl: `/blog/${file.parent.name}/${file.name}`,
+                })
             }
         }
 
@@ -92,6 +139,11 @@ async function crossReferenceArticles(context: IContext) {
 
     for await (const article of graph.articles) {
         article.related = graph.articles.filter(bySameTagFilter(article))
+    }
+
+    for await (const tag of graph.tags) {
+        const imageName = new File(tag.hero).name
+        tag.heroUrl = `/tag/${tag.name}/${imageName}`
     }
 }
 

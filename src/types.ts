@@ -1,3 +1,5 @@
+import { File } from './graph/util'
+
 export type IGraph = {
     about: IAbout
     articles: IArticle[]
@@ -13,7 +15,7 @@ export interface IArticle extends IFrontmatter {
     readableDate: string
     htmlContent: string
     htmlSnippet: string
-    heroStaticPath: string
+    heroUrl: string
     originalMarkdown: string
     originalPath: string
     url: string
@@ -34,9 +36,11 @@ export interface ITag {
     key: string
     name: string
     hero: string
+    heroUrl: string
     story: string
     aliases: string[]
     urls: string[]
+    url: string
 }
 
 export interface IFrontmatter {
@@ -51,10 +55,10 @@ export interface IFrontmatter {
 }
 
 export interface IImage {
-    originalPath: string
-    relativePath: string
-    width: number
     height: number
+    imageUrl: string
+    file: File
+    width: number
 }
 
 export interface IPublic {

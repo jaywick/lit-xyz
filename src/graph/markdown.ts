@@ -95,7 +95,7 @@ export async function resolveArticle(
         readTime: readTime(markdownContent),
         htmlContent,
         htmlSnippet,
-        heroStaticPath: `/blog/${id}/${frontmatter.hero}`,
+        heroUrl: `/blog/${id}/${frontmatter.hero}`,
         url: `/blog/${id}/${frontmatter.slug}`,
         excerpt: await plainText(markdownExcerpt || ''),
 

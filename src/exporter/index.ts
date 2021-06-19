@@ -12,7 +12,6 @@ export async function exportAll(context: IContext) {
     const {
         graph,
         filesystem: { dist },
-        args: { skipExport },
     } = context
 
     return new Listr<IContext>(
@@ -44,6 +43,7 @@ export async function exportAll(context: IContext) {
                         Home({
                             articles: graph.articles,
                             about: graph.about,
+                            tags: graph.tags,
                         })
                     )
                 },

@@ -1,34 +1,17 @@
 import { Header } from './components/header'
-import { IAbout, IArticle } from '../types'
+import { IAbout, IArticle, ITag } from '../types'
 import { byDateDescSorter, html } from './utils'
 import { Footer } from './components/footer'
 import { Head } from './components/head'
+import { Card } from './components/card'
 
 interface HomeArgs {
     articles: IArticle[]
     about: IAbout
+    tags: ITag[]
 }
 
-export const Home = ({ articles, about }: HomeArgs) => {
-    const projectArticles = articles.filter((a) =>
-        [
-            'vizr',
-            'feeds',
-            'kalq',
-            'jaywick-xyz',
-            'its-time',
-            'blackstorm-alpha',
-            'car-pc',
-            'opencity',
-            'other-projects',
-            'university',
-        ].includes(a.tag)
-    )
-
-    const lifeArticles = articles.filter((a) =>
-        ['opinion', 'life', 'pro-tip', 'gadgets'].includes(a.tag)
-    )
-
+export const Home = ({ articles, about, tags }: HomeArgs) => {
     return html`<!DOCTYPE html>
         <html lang="en">
             ${Head({
@@ -45,25 +28,39 @@ export const Home = ({ articles, about }: HomeArgs) => {
                     </section>
                     <section>
                         <h2>Recent Posts</h2>
-                        <ul>
-                            ${lifeArticles.sort(byDateDescSorter).map(
-                                ({ id, title, url }) => html`
-                                    <li key="${id}">
-                                        <a href="${url}">${title} </a>
-                                    </li>
-                                `
-                            )}
+                        <ul class="card-grid">
+                            ${articles
+                                .sort(byDateDescSorter)
+                                .slice(0, 9)
+                                .map(
+                                    ({
+                                        title,
+                                        readableDate,
+                                        heroUrl,
+                                        readTime,
+                                        url,
+                                    }) =>
+                                        Card({
+                                            title,
+                                            url,
+                                            subtitle: [
+                                                readableDate,
+                                                `${readTime} min read`,
+                                            ],
+                                            heroUrl,
+                                        })
+                                )}
                         </ul>
                     </section>
                     <section>
                         <h2>Projects</h2>
-                        <ul>
-                            ${projectArticles.sort(byDateDescSorter).map(
-                                ({ id, title, url }) => html`
-                                    <li key="${id}">
-                                        <a href="${url}">${title} </a>
-                                    </li>
-                                `
+                        <ul class="card-grid">
+                            ${tags.slice(0, 9).map(({ heroUrl, name, url }) =>
+                                Card({
+                                    title: name,
+                                    url,
+                                    heroUrl,
+                                })
                             )}
                         </ul>
                     </section>

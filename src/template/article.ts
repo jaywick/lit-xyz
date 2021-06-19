@@ -36,7 +36,7 @@ export const Article = ({
                     <span>${article.readTime} min read</span>
                 </div>
                 ${Hero({
-                    url: article.heroStaticPath,
+                    url: article.heroUrl,
                     alt: article.heroAlt,
                     images,
                 })}

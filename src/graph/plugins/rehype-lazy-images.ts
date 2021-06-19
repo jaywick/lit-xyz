@@ -35,9 +35,7 @@ export const rehypeLazyImages: Plugin<[RehypeLazyImageOptions]> =
                 if (!isExternal) {
                     const { base, name, ext } = paths.parse(properties.src)
 
-                    const image = images.find((x) =>
-                        x.relativePath.endsWith(base)
-                    )
+                    const image = images.find((x) => x.imageUrl.endsWith(base))
 
                     if (image) {
                         properties.width = String(image.width)

@@ -2,7 +2,7 @@
 title: 'We wash our brush with odorless thinner. Poor old tree.'
 slug: we-wash-our-brush-with-odorless-thinner-poor-old-tree
 date: 2017-01-10
-tag: life
+tag: protip
 hero: bob-ross-oak_blue-ridge-falls-articleLarge-v2.jpg
 ---
 

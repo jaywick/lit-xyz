@@ -2,7 +2,7 @@
 title: 'Van Dyke Brown is a very nice brown'
 slug: van-dyke-brown-is-a-very-nice-brown
 date: 2017-01-10
-tag: life
+tag: protip
 hero: feature.jpg
 ---
 

@@ -12,7 +12,7 @@ export function Hero({ url, alt, images }: HeroArgs) {
     const { base, name, ext, dir } = parsePath(url)
 
     const { width, height } =
-        images.find((x) => x.relativePath.endsWith(base)) || {}
+        images.find((x) => x.imageUrl.endsWith(base)) || {}
 
     const filePathWithNoExt = resolvePath(dir, name)
 
