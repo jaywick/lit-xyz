@@ -2,6 +2,7 @@
     --typography-headings: 'IBM Plex Mono', monospace;
     --typography-content: 'IBM Plex Mono', monospace;
     --typography-code: 'IBM Plex Mono', monospace;
+    --max-width: 1000px;
 }
 
 html {
@@ -18,6 +19,10 @@ body {
     background: var(--theme-gradient);
     margin: 0;
     padding: 0;
+}
+
+section {
+    margin: 5rem 0;
 }
 
 @media print {
@@ -41,7 +46,7 @@ article,
 main {
     line-height: 1.756;
     margin: 0 auto 35px;
-    max-width: 680px;
+    max-width: var(--max-width);
     padding: 1rem;
 }
 
@@ -96,11 +101,11 @@ a {
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     line-height: 1.15;
     color: var(--theme-primary);
     font-family: var(--typography-headings);
-    font-weight: bold;
+    font-weight: 200;
 }
 
 blockquote {
@@ -147,7 +152,7 @@ kbd:not(:last-of-type) {
 hr {
     position: relative;
     width: 100%;
-    width: min(680px, 100%);
+    width: min(var(--max-width), 100%);
     height: 14.36px;
     background-image: url("data:image/svg+xml,%3Csvg width='10' height='15' viewBox='0 0 10 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.567383' y='14.1777' width='16' height='1' transform='rotate(-60 0.567383 14.1777)' fill='%232D2E33'/%3E%3C/svg%3E");
     box-sizing: border-box;
@@ -202,12 +207,12 @@ mark {
     padding: 3px;
 }
 
-.title {
-    text-transform: uppercase;
-}
-
 .title a {
     color: var(--theme-grey);
+}
+
+.tagline {
+    font-weight: 200;
 }
 
 .title a:hover {
@@ -227,7 +232,7 @@ footer {
     height: 200px;
     line-height: 1.756;
     margin: 50px auto 0;
-    max-width: 680px;
+    max-width: var(--max-width);
     padding: 1rem;
 }
 
@@ -235,7 +240,7 @@ header {
     color: var(--theme-grey);
     line-height: 1.756;
     margin: 1rem auto 2rem;
-    max-width: 680px;
+    max-width: var(--max-width);
     padding: 1rem;
 }
 
@@ -377,7 +382,7 @@ main.error h1 {
     font-weight: 200;
 }
 
-ul.recent-posts {
+ul.card-grid {
     display: grid;
     gap: 2rem 1.5rem;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -386,25 +391,29 @@ ul.recent-posts {
     padding: 0px 1em;
 }
 
-.post-card-thumbnail {
+.card {
     width: 300px;
-    height: 200px;
-    background: url('/blog/777/bob-ross-oak_blue-ridge-falls-articleLarge-v2.jpg');
 }
 
-.post-card a {
+.card-thumbnail {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card a {
     color: unset;
     text-decoration: none;
 }
 
-.post-card a:hover {
+.card a:hover {
     color: var(--theme-accent);
 }
 
-.post-card-title {
+.card-title {
     font-style: italic;
 }
 
-.post-card-details {
+.card-details {
     opacity: 0.6;
 }
