@@ -2,6 +2,7 @@ import paths from 'path'
 import { existsSync, lstatSync, promises as fs } from 'fs'
 import { log } from '../reporter'
 import md5file from 'md5-file'
+import globSearch from 'glob'
 
 abstract class FileSystemObject {
     path: string
@@ -111,6 +112,18 @@ export class Directory extends FileSystemObject {
                 yield new Directory(childPath)
             }
         }
+    }
+
+    async glob(pattern: string): Promise<File[]> {
+        return new Promise((resolve, reject) => {
+            globSearch(pattern, { root: this.path }, (err, matches) => {
+                if (err) {
+                    return reject(err)
+                }
+
+                return resolve(matches.map((x) => new File(x)))
+            })
+        })
     }
 
     async *files() {

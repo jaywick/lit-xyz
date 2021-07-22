@@ -1,16 +1,17 @@
 export type StaticHtml = string
 
+type TemplateStringValue =
+    | string
+    | number
+    | boolean
+    | undefined
+    | null
+    | string[]
+    | StaticHtml
+
 export function html(
     strings: TemplateStringsArray,
-    ...values: (
-        | string
-        | number
-        | boolean
-        | undefined
-        | null
-        | string[]
-        | StaticHtml
-    )[]
+    ...values: TemplateStringValue[]
 ): StaticHtml {
     let result = strings[0]
 
@@ -47,3 +48,15 @@ function normalize(value: unknown): string {
 
 export const byDateDescSorter = (a: { date: string }, b: { date: string }) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
+
+export function attr(obj: Record<string, TemplateStringValue>) {
+    return Object.keys(obj).reduce((attrString, key) => {
+        const value = normalize(obj[key])
+
+        if (!value) {
+            return attrString
+        }
+
+        return `${attrString} ${key}="${value}"`
+    }, '')
+}

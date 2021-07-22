@@ -15,7 +15,7 @@ export const NotFound = ({ about }: NotFoundArgs) => html`<!DOCTYPE html>
         })}
         <body>
             <main class="error">
-                <h1>This is a little bit awkaward...</h1>
+                <h1>This is a little bit akward...</h1>
                 <p class="byline">This URL doesnt match any page we expected</p>
             </main>
         </body>

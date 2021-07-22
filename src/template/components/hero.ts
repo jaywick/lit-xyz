@@ -11,6 +11,15 @@ interface HeroArgs {
 export function Hero({ url, alt, images }: HeroArgs) {
     const { base, name, ext, dir } = parsePath(url)
 
+    if (url.startsWith('http:') || url.startsWith('https:')) {
+        return html`<img
+            class="hero"
+            src="${url}"
+            loading="lazy"
+            sizes="100vw"
+        />`
+    }
+
     const { width, height } =
         images.find((x) => x.imageUrl.endsWith(base)) || {}
 

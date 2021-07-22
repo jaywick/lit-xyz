@@ -11,6 +11,13 @@
         },
         {
             "type": "npm",
+            "script": "play",
+            "problemMatcher": [],
+            "label": "$(symbol-misc) Playground",
+            "detail": "Debug templates with refresh on save"
+        },
+        {
+            "type": "npm",
             "script": "start",
             "problemMatcher": [
                 "$tsc-watch",

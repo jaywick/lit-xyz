@@ -212,7 +212,7 @@ mark {
 }
 
 .tagline {
-    font-weight: 200;
+    color: var(--theme-grey);
 }
 
 .title a:hover {
@@ -273,19 +273,19 @@ svg.main-logo {
 }
 
 .banner.banner-error {
-    background: #880e4f;
+    border: 5px solid #880e4f;
 }
 
 .banner.banner-tip {
-    background: #558b2f;
+    border: 5px solid #558b2f;
 }
 
 .banner.banner-warn {
-    background: #f57f17;
+    border: 5px solid #f57f17;
 }
 
 .banner.banner-info {
-    background: #0d47a1;
+    border: 5px solid #0d47a1;
 }
 
 .banner-header {

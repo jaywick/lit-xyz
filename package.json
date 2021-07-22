@@ -6,6 +6,7 @@
     "scripts": {
         "start": "nodemon --watch src --watch public --watch doc -e ts,md,mdx,css,yml --loader ts-node/esm . --resolveJsonModule --mock-data --skip-images --serve",
         "export": "node --loader ts-node/esm . --resolveJsonModule",
+        "play": "nodemon --watch src/play --watch public --watch src/template -e ts,css -- --loader ts-node/esm . --playground",
         "lint": "nodemon --watch doc -e mdx,md --loader ts-node/esm . --resolveJsonModule --skip-images --skip-export",
         "typecheck": "tsc -p . --noEmit"
     },
@@ -15,6 +16,7 @@
         "@types/node": "15.9.0",
         "chalk": "4.1.1",
         "commander": "7.2.0",
+        "glob": "^7.1.7",
         "gray-matter": "4.0.3",
         "jimp": "0.16.1",
         "listr": "^0.14.3",
@@ -96,10 +98,14 @@
         "unified-lint-rule": "1.0.6",
         "unist-builder": "^3.0.0",
         "unist-util-visit": "2.0.3",
+        "uuid": "^8.3.2",
         "yaml": "1.10.2"
     },
     "devDependencies": {
+        "@types/glob": "^7.1.4",
+        "@types/md5-file": "^5.0.0",
         "@types/nodemon": "1.19.0",
+        "@types/uuid": "^8.3.1",
         "@types/yaml": "1.9.7"
     }
 }
