@@ -1,14 +1,17 @@
 import { range } from 'lodash'
 import {
-    mockArticle1,
-    mockArticle2,
-    mockArticle3,
+    mockBasicArticle1,
+    mockBasicArticle2,
+    mockBasicArticle3,
     mockTag1,
 } from '../../mock-data/mocks'
 import { Series as SeriesView } from './series'
 
 export const Series = () =>
-    SeriesView({ tag: mockTag1, related: [mockArticle2, mockArticle3] })
+    SeriesView({
+        tag: mockTag1,
+        related: [mockBasicArticle2, mockBasicArticle3],
+    })
 
 export const SeriesWithNoRelated = () =>
     SeriesView({ tag: mockTag1, related: [] })
@@ -24,5 +27,5 @@ export const SeriesWithLotsOfRelatedArticles = () =>
             'Occaecat Sint Aute Deserunt Est Velit Aute Officia',
             'Pariatur Minim Ut Aliquip Consequat In Laborum Sunt Id Tempor Officia Consectetur',
             'Excepteur Elit Mollit Adipisicing Enim Qui Commodo Qui Commodo Eiusmod Qui Aliqua',
-        ].map((title) => ({ ...mockArticle1, title })),
+        ].map((title) => ({ ...mockBasicArticle1, title })),
     })

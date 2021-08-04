@@ -14,8 +14,10 @@
     --theme-track: rgba(8, 8, 11, 0.3);
     --theme-progress: #000;
     --theme-card: #fff;
-    --theme-error: #ee565b;
-    --theme-success: #46b17b;
+    --theme-error: #f7768e;
+    --theme-warn: #ff9e64;
+    --theme-info: #7aa2f7;
+    --theme-tip: #bb9af7;
     --theme-errorBackground: rgba(238, 86, 91, 0.1);
     --theme-horizontalRule: rgba(8, 8, 11, 0.15);
     --theme-inputBackground: rgba(0, 0, 0, 0.05);

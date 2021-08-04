@@ -22,6 +22,13 @@ export function html(
     return result
 }
 
+export function css(
+    strings: TemplateStringsArray,
+    ...values: TemplateStringValue[]
+): StaticHtml {
+    return `<style>${html(strings, ...values)}</style>`
+}
+
 function normalize(value: unknown): string {
     if (value == null || value === false) {
         return ''

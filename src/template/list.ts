@@ -1,10 +1,10 @@
 import { Header } from './components/header'
 import { IAbout, IArticle, IImage, ITag } from '../types'
-import { html } from './utils'
+import { byDateDescSorter, html } from './utils'
 import { Footer } from './components/footer'
 import { Head } from './components/head'
+import { Card } from './components/card'
 import { Series } from './components/series'
-import { Hero } from './components/hero'
 
 interface ListArgs {
     articles: IArticle[]
@@ -13,44 +13,56 @@ interface ListArgs {
     images: IImage[]
 }
 
-export const List = ({ articles, about, images, tag }: ListArgs) => {
+const allArticles: ITag = {
+    name: 'Articles',
+    aliases: [],
+    hero: '',
+    heroUrl: '',
+    key: '',
+    story: 'All blog posts',
+    url: '',
+    urls: [],
+}
+
+export const List = ({ articles, about, tag = allArticles }: ListArgs) => {
     return html`<!DOCTYPE html>
         <html lang="en">
             ${Head({
-                title: `Jay Wick | ${tag?.name || 'Blog Posts'}`,
-                description: tag?.story ?? 'Blog Posts',
+                title: about.title,
+                description: about.description,
                 themeColor: about.themeColor,
             })}
             <body>
-                ${Header()} ${tag && Series({ tag, related: [] })}
-                ${articles.map(
-                    (article) => html`
-                        <article class="list-article">
-                            <h1>
-                                <a href="${article.url}">${article.title}</a>
-                            </h1>
-                            <div class="byline">
-                                <address class="author">
-                                    ${article.author}
-                                </address>
-                                &bull;
-                                <time datetime="{date}">
-                                    ${article.readableDate}
-                                </time>
-                                &bull;
-                                <span>${article.readTime} min read</span>
-                            </div>
-                            ${Hero({
-                                url: article.heroUrl,
-                                alt: article.heroAlt,
-                                images,
-                            })}
-                            <div aria-roledescription="article content">
-                                ${article.htmlSnippet}
-                            </div>
-                        </article>
-                    `
-                )}
+                ${Header()}
+                <main>
+                    ${Series({ tag, related: [] })}
+                    <section>
+                        <h2>Articles</h2>
+                        <ul class="card-grid">
+                            ${articles
+                                .sort(byDateDescSorter)
+                                .slice(0, 9)
+                                .map(
+                                    ({
+                                        title,
+                                        readableDate,
+                                        heroUrl,
+                                        readTime,
+                                        url,
+                                    }) =>
+                                        Card({
+                                            title,
+                                            url,
+                                            subtitle: [
+                                                readableDate,
+                                                `${readTime} min read`,
+                                            ],
+                                            heroUrl,
+                                        })
+                                )}
+                        </ul>
+                    </section>
+                </main>
                 ${Footer({ author: about.author })}
             </body>
         </html>`

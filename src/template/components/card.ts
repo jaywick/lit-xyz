@@ -12,9 +12,12 @@ export function Card({ title, heroUrl, url, subtitle = [] }: CardArgs) {
     return html`<li class="card">
         <a href="${url}">
             <img src="${heroUrl}" class="card-thumbnail" />
-            <div class="card-title">${title}</div>
-            <div class="card-details">
-                ${flattenedSubtitle.join(' &bullet; ')}
+            <div class="card-text">
+                <div class="card-title">${title}</div>
+                ${flattenedSubtitle.length > 0 &&
+                html`<div class="card-details">
+                    ${flattenedSubtitle.join(' &bullet; ')}
+                </div>`}
             </div>
         </a>
     </li>`

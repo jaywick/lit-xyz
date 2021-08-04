@@ -9,6 +9,14 @@ import { URLSearchParams } from 'url'
 export async function play() {
     const publicDir = new Directory(__dirname, '..', '..', 'public')
     const templatesDir = new Directory(__dirname, '..', '..', 'src', 'template')
+    const sampleImageDir = new Directory(
+        __dirname,
+        '..',
+        '..',
+        'src',
+        'mock-data',
+        'images'
+    )
 
     const playgrounds: PlaygroundMap = {}
     for (const playFile of await templatesDir.glob('**/*.play.ts')) {
@@ -46,6 +54,12 @@ export async function play() {
 
         if (publicFile.exists()) {
             return res.end(await publicFile.streamContent())
+        }
+
+        const sampleImage = sampleImageDir.file(req.url.slice(1))
+
+        if (sampleImage.exists()) {
+            return res.end(await sampleImage.streamContent())
         }
 
         const filename = searchParams['path']

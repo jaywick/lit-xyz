@@ -5,6 +5,7 @@ import { IArticle, ITag } from '../types'
 import { resolveImage } from './image'
 import { resolveArticle } from './markdown'
 import { File, nil } from './util'
+import util from 'util'
 import { resolveAbout, resolveTags } from './yaml'
 
 export async function generateGraph(context: IContext) {
@@ -35,6 +36,10 @@ export async function generateGraph(context: IContext) {
             {
                 title: 'Collect public files',
                 task: collectPublicFiles,
+            },
+            {
+                title: 'Cache graph',
+                task: cacheGraph,
             },
         ],
         {
@@ -143,7 +148,7 @@ async function crossReferenceArticles(context: IContext) {
 
     for await (const tag of graph.tags) {
         const imageName = new File(tag.hero).name
-        tag.heroUrl = `/tag/${tag.name}/${imageName}`
+        tag.heroUrl = `/tag/${tag.key}/${imageName}`
     }
 }
 
@@ -156,6 +161,14 @@ async function collectPublicFiles(context: IContext) {
     for await (const file of publics.files()) {
         graph.public.push({ originalPath: file.path })
     }
+}
+
+async function cacheGraph(context: IContext) {
+    const { graph, filesystem } = context
+
+    await filesystem.dist.parent
+        .file('.graph')
+        .writeContent(util.inspect(graph))
 }
 
 const bySameTagFilter = (a: IArticle) => (b: IArticle) =>

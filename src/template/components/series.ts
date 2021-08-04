@@ -1,5 +1,6 @@
 import { IRelatedArticle, ITag } from '../../types'
 import { html, byDateDescSorter } from '../utils'
+import { Card } from './card'
 
 interface SeriesArgs {
     tag: ITag
@@ -17,15 +18,17 @@ export const Series = ({ tag, related }: SeriesArgs) => {
             <div>${tag.story}</div>
             ${shouldListRelatedArticles &&
             html`<h4>More in this series</h4>
-                <ul>
-                    ${related.sort(byDateDescSorter).map(
-                        ({ id, title, url, readableDate }) => html`
-                            <li key="${id}">
-                                <a href="${url}">${title}</a>
-                                <span class="subtitle">${readableDate}</span>
-                            </li>
-                        `
-                    )}
+                <ul class="card-grid">
+                    ${related
+                        .sort(byDateDescSorter)
+                        .map(({ id, title, url, heroUrl, readableDate }) =>
+                            Card({
+                                title,
+                                url,
+                                subtitle: readableDate,
+                                heroUrl,
+                            })
+                        )}
                 </ul>`}
         </section>
     `

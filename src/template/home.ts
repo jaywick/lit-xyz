@@ -4,6 +4,7 @@ import { byDateDescSorter, html } from './utils'
 import { Footer } from './components/footer'
 import { Head } from './components/head'
 import { Card } from './components/card'
+import { Chip } from './components/chip'
 
 interface HomeArgs {
     articles: IArticle[]
@@ -15,7 +16,7 @@ export const Home = ({ articles, about, tags }: HomeArgs) => {
     return html`<!DOCTYPE html>
         <html lang="en">
             ${Head({
-                title: 'Jay Wick',
+                title: about.title,
                 description: about.description,
                 themeColor: about.themeColor,
             })}
@@ -27,7 +28,7 @@ export const Home = ({ articles, about, tags }: HomeArgs) => {
                         <p class="tagline">${about.tagline}</p>
                     </section>
                     <section>
-                        <h2>Recent Posts</h2>
+                        <h2>Articles</h2>
                         <ul class="card-grid">
                             ${articles
                                 .sort(byDateDescSorter)
@@ -54,9 +55,9 @@ export const Home = ({ articles, about, tags }: HomeArgs) => {
                     </section>
                     <section>
                         <h2>Projects</h2>
-                        <ul class="card-grid">
+                        <ul class="chip-grid">
                             ${tags.slice(0, 9).map(({ heroUrl, name, url }) =>
-                                Card({
+                                Chip({
                                     title: name,
                                     url,
                                     heroUrl,
