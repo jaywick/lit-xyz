@@ -18,15 +18,16 @@ export const Series = ({ tag, related }: SeriesArgs) => {
             <div>${tag.story}</div>
             ${shouldListRelatedArticles &&
             html`<h4>More in this series</h4>
-                <ul class="card-grid">
+                <ul class="mini-card-grid">
                     ${related
                         .sort(byDateDescSorter)
-                        .map(({ id, title, url, heroUrl, readableDate }) =>
+                        .map(({ title, url, heroUrl, readableDate }) =>
                             Card({
                                 title,
                                 url,
                                 subtitle: readableDate,
                                 heroUrl,
+                                isCompact: true,
                             })
                         )}
                 </ul>`}

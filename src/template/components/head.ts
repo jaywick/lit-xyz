@@ -22,15 +22,15 @@ export const Head = ({
     <meta name="description" content="${description}" />
     <link rel="apple-touch-icon" href="/logo192.png" />
     ${ThemeStyles({ colorScheme })}
-    <link rel="stylesheet" type="text/css" href="/styles.css" />
+    <link media="screen" rel="stylesheet" type="text/css" href="/styles.css" />
     ${shouldIncludeCodeCss &&
     html`<link
-            href="//unpkg.com/prism-theme-night-owl@1.4.0/build/style.css"
+            href="https://unpkg.com/prism-theme-night-owl@1.4.0/build/style.css"
             media="screen and (prefers-color-scheme: dark)"
             rel="stylesheet"
         />
         <link
-            href="//unpkg.com/prism-theme-night-owl@1.4.0/build/light.css"
+            href="https://unpkg.com/prism-theme-night-owl@1.4.0/build/light.css"
             media="screen and (prefers-color-scheme: light)"
             rel="stylesheet"
         />`}
