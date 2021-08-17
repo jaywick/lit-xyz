@@ -51,7 +51,7 @@ export async function log(errorLevel: 'WARN' | 'INFO' | 'ERROR', args: Args) {
                 chalk.cyan(args.filepath) + ':1',
                 args.group,
                 args.message,
-                args.data == null
+                args.data == null || process.argv.includes('--no-log-data')
                     ? ''
                     : ': ' + chalk.gray(util.inspect(args.data)),
             ]
