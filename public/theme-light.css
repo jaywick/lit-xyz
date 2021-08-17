@@ -14,13 +14,16 @@
     --theme-track: rgba(8, 8, 11, 0.3);
     --theme-progress: #000;
     --theme-card: #fff;
-    --theme-error: #f7768e;
-    --theme-warn: #ff9e64;
-    --theme-info: #7aa2f7;
-    --theme-tip: #bb9af7;
-    --theme-errorBackground: rgba(238, 86, 91, 0.1);
+    /* https://coolors.co/f7768e-ff9e64-7aa2f7-bb9af7 */
+    --theme-error-icon: #f7768e;
+    --theme-warn-icon: #ff9e64;
+    --theme-info-icon: #7aa2f7;
+    --theme-tip-icon: #bb9af7;
+    --theme-error: #fdd7de;
+    --theme-warn: #ffe2d1;
+    --theme-info: #d7e3fd;
+    --theme-tip: #ebe1fd;
     --theme-horizontalRule: rgba(8, 8, 11, 0.15);
-    --theme-inputBackground: rgba(0, 0, 0, 0.05);
     --theme-highlight: #ffe31e;
     --theme-codeBackground: #f0f2f7;
 }

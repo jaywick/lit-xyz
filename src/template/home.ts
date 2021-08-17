@@ -38,6 +38,7 @@ export const Home = ({ articles, about, tags }: HomeArgs) => {
                                         title,
                                         readableDate,
                                         heroUrl,
+                                        heroAlt,
                                         readTime,
                                         url,
                                     }) =>
@@ -49,6 +50,7 @@ export const Home = ({ articles, about, tags }: HomeArgs) => {
                                                 `${readTime} min read`,
                                             ],
                                             heroUrl,
+                                            heroAlt,
                                         })
                                 )}
                         </ul>
@@ -56,11 +58,12 @@ export const Home = ({ articles, about, tags }: HomeArgs) => {
                     <section>
                         <h2>Projects</h2>
                         <ul class="chip-grid">
-                            ${tags.slice(0, 9).map(({ heroUrl, name, url }) =>
+                            ${tags.map(({ heroUrl, heroAlt, name, url }) =>
                                 Chip({
                                     title: name,
                                     url,
                                     heroUrl,
+                                    heroAlt,
                                 })
                             )}
                         </ul>

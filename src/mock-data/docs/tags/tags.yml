@@ -1,6 +1,7 @@
 - key: code
   name: Code
   hero: ./heroes/code.jpg
+  heroAlt: mobile phone with text saying 'eat sleep code repeat'
   story: Adipisicing non commodo fugiat eu dolor aliqua deserunt id excepteur.
   urls:
       - https://example.com
@@ -8,6 +9,7 @@
 - key: protip
   name: ProTip
   hero: ./heroes/protip.jpg
+  heroAlt: partially focused view of flight safety instructions
   story: Aliqua anim dolor nostrud adipisicing do voluptate tempor enim ut commodo mollit et occaecat non. Nisi enim non reprehenderit non ad ut irure Lorem incididunt proident. Ex nisi magna sint laborum do mollit aliquip ullamco eiusmod eu consectetur. Veniam excepteur officia aliqua nisi eu sint duis qui voluptate sunt irure proident.
   urls:
       - https://test.com

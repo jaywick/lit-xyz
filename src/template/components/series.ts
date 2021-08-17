@@ -21,12 +21,13 @@ export const Series = ({ tag, related }: SeriesArgs) => {
                 <ul class="mini-card-grid">
                     ${related
                         .sort(byDateDescSorter)
-                        .map(({ title, url, heroUrl, readableDate }) =>
+                        .map(({ title, url, heroUrl, heroAlt, readableDate }) =>
                             Card({
                                 title,
                                 url,
                                 subtitle: readableDate,
                                 heroUrl,
+                                heroAlt,
                                 isCompact: true,
                             })
                         )}

@@ -37,6 +37,7 @@ export interface ITag {
     name: string
     hero: string
     heroUrl: string
+    heroAlt: string
     story: string
     aliases: string[]
     urls: string[]

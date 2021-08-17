@@ -1,9 +1,11 @@
 import { html } from '../utils'
+import { Image } from './image'
 
 interface CardArgs {
     title: string
     url: string
     heroUrl: string
+    heroAlt: string
     subtitle?: string | string[]
     isCompact?: boolean
 }
@@ -11,6 +13,7 @@ interface CardArgs {
 export function Card({
     title,
     heroUrl,
+    heroAlt,
     url,
     isCompact = false,
     subtitle = [],
@@ -20,7 +23,11 @@ export function Card({
 
     return html`<li class="${classPrefix}">
         <a href="${url}">
-            <img src="${heroUrl}" class="${classPrefix}-thumbnail" />
+            ${Image({
+                url: heroUrl,
+                alt: heroAlt,
+                className: classPrefix + '-thumbnail',
+            })}
             <div class="${classPrefix}-text">
                 <div class="${classPrefix}-title">${title}</div>
                 ${flattenedSubtitle.length > 0 &&

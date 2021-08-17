@@ -18,6 +18,7 @@ const allArticles: ITag = {
     aliases: [],
     hero: '',
     heroUrl: '',
+    heroAlt: '',
     key: '',
     story: 'All blog posts',
     url: '',
@@ -47,6 +48,7 @@ export const List = ({ articles, about, tag = allArticles }: ListArgs) => {
                                         title,
                                         readableDate,
                                         heroUrl,
+                                        heroAlt,
                                         readTime,
                                         url,
                                     }) =>
@@ -58,6 +60,7 @@ export const List = ({ articles, about, tag = allArticles }: ListArgs) => {
                                                 `${readTime} min read`,
                                             ],
                                             heroUrl,
+                                            heroAlt,
                                         })
                                 )}
                         </ul>
