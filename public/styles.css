@@ -1,27 +1,9 @@
 :root {
-    --typography-headings: 'Cascadia Code', 'Courier New', Courier, monospace;
-    --typography-content: 'Cascadia Code', 'Courier New', Courier, monospace;
-    --typography-code: 'Cascadia Code', 'Courier New', Courier, monospace;
+    --typography-headings: 'Space Mono', monospace;
+    --typography-content: 'Space Mono', monospace;
+    --typography-code: 'Space Mono', monospace;
     --max-width: 1000px;
     --horizontal-padding: 2rem;
-}
-
-@font-face {
-    font-family: 'Cascadia Code';
-    src: url('/CascadiaCode.woff2') format('woff2'),
-        url('/CascadiaCode.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Cascadia Code';
-    src: url('/CascadiaCodeItalic.woff2') format('woff2'),
-        url('/CascadiaCodeItalic.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
 }
 
 html {

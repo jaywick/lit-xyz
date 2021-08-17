@@ -23,6 +23,12 @@ export const Head = ({
     <link rel="apple-touch-icon" href="/logo192.png" />
     ${ThemeStyles({ colorScheme })}
     <link media="screen" rel="stylesheet" type="text/css" href="/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet"
+    />
     ${shouldIncludeCodeCss &&
     html`<link
             href="https://unpkg.com/prism-theme-night-owl@1.4.0/build/style.css"
